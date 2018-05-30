@@ -1,0 +1,18 @@
+package world;
+
+/*
+ * Represents a single tile.
+ */
+public interface Tile
+{
+	/*
+	 * Called when the player moves to this tile.
+	 */
+	public void onPlayer(/* TODO: Add params for player modification */);
+	
+	/*
+	 * Player will be unable to move to this tile if this returns false.
+	 */
+	public boolean canPass();
+	
+}

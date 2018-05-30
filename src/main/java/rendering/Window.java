@@ -1,4 +1,4 @@
-package RenderSystem;
+package rendering;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;

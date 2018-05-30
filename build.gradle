@@ -8,6 +8,8 @@ repositories {
     mavenCentral()
 }
 
+
+// This is the name of the class that contains the main.
 mainClassName = 'Main'
 
 // Main task for running the game

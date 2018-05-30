@@ -1,4 +1,4 @@
-package RenderSystem;
+package rendering;
 import java.util.Arrays;
 
 public class Vertex

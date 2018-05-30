@@ -1,13 +1,10 @@
 
-import RenderSystem.*;
+import rendering.*;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
-
-import RenderSystem.Vertex;
-import RenderSystem.VertexArray;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -47,6 +44,7 @@ public class MainWindow
 		vertsArr.add((new Vertex()).setPosition(1, 1));
 		vertsArr.add((new Vertex()).setPosition(0, 1));
 		vertsArr.add((new Vertex()).setPosition(0, 0));
+		
 		
 		int vaoId = glGenVertexArrays();
 		glBindVertexArray(vaoId);
