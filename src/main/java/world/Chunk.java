@@ -20,6 +20,11 @@ public class Chunk
 	 */
 	public static final int TileCount = RowTileCount * RowTileCount;
 	
+	public Chunk()
+	{
+		fillBlankTiles();
+	}
+	
 	/*
 	 * Fill the entire chunk with empty tiles.
 	 */
@@ -33,6 +38,8 @@ public class Chunk
 	 */
 	public Tile setTile(int p_X, int p_Y, Tile p_NewTile)
 	{
+		if (p_NewTile == null)
+			throw new IllegalArgumentException("Null tile");
 		Tile oldTile = getTile(p_X, p_Y);
 		m_Tiles[p_X + p_Y * RowTileCount] = p_NewTile;
 		return oldTile;
@@ -43,7 +50,7 @@ public class Chunk
 	 */
 	public Tile getTile(int p_X, int p_Y)
 	{
-		if (p_X < 0 || p_X >= 16 || p_Y < 0 || p_Y >= 16)
+		if (p_X < 0 || p_X >= RowTileCount || p_Y < 0 || p_Y >= RowTileCount)
 			throw new IllegalArgumentException("Invalid Tile Position");
 		return m_Tiles[p_X + p_Y * RowTileCount];
 	}

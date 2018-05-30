@@ -9,8 +9,8 @@ public class EmptyTile implements Tile
 	}
 
 	@Override
-	public boolean canPass()
+	public boolean isObstacle()
 	{
-		return true;
+		return false;
 	}
 }

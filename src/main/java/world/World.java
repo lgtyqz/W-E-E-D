@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class World
 {
-	public ArrayList<Chunk> m_Chunks;
+	private ArrayList<Chunk> m_Chunks;
 	
 	/*
 	 * TODO: Returns tile in world position.

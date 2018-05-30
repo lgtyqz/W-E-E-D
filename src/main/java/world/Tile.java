@@ -11,8 +11,8 @@ public interface Tile
 	public void onPlayer(/* TODO: Add params for player modification */);
 	
 	/*
-	 * Player will be unable to move to this tile if this returns false.
+	 * Player will be unable to move to this tile if this returns true.
 	 */
-	public boolean canPass();
+	public boolean isObstacle();
 	
 }

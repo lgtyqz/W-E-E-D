@@ -17,6 +17,9 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+/*
+ * TODO: Wrap most of the window fucntionality in the window class
+ */
 public class MainWindow
 {
 	public MainWindow()
