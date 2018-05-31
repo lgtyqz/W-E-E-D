@@ -6,6 +6,7 @@ public class EmptyTile implements Tile
 	public void onPlayer()
 	{
 		// Does nothing...
+		// TODO: Makes it do something
 	}
 
 	@Override

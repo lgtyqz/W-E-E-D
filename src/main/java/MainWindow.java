@@ -16,22 +16,26 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+//import javax.swing.Timer;
+//import java.awt.event.*;
 
 /*
  * TODO: Wrap most of the window fucntionality in the window class
  */
-public class MainWindow
+public class MainWindow //implements ActionListener
 {
+	//Timer timer;
 	public MainWindow()
 	{
 		GLFWErrorCallback.createPrint(System.err).set();
+		//Timer timer = new Timer(20, this);
 	}
 	
 	public void init()
 	{
 		long window;
 		glfwInit();
-		
+		long firstTime = System.nanoTime();
 		window = glfwCreateWindow(300, 300, "pie", NULL, NULL);
 		
 		glfwMakeContextCurrent(window);
@@ -41,12 +45,12 @@ public class MainWindow
 		glClearColor(1.0f, 0.7f, 0.7f, 0.0f);
 		
 		VertexArray vertsArr = new VertexArray();
-		vertsArr.add((new Vertex()).setPosition(0, 0));
-		vertsArr.add((new Vertex()).setPosition(1, 0));
+		vertsArr.add((new Vertex()).setPosition(-1, -1));
+		vertsArr.add((new Vertex()).setPosition(-1, 1));
 		vertsArr.add((new Vertex()).setPosition(1, 1));
 		vertsArr.add((new Vertex()).setPosition(1, 1));
-		vertsArr.add((new Vertex()).setPosition(0, 1));
-		vertsArr.add((new Vertex()).setPosition(0, 0));
+		vertsArr.add((new Vertex()).setPosition(1, -1));
+		vertsArr.add((new Vertex()).setPosition(-1, -1));
 		
 		
 		int vaoId = glGenVertexArrays();
@@ -61,12 +65,23 @@ public class MainWindow
 		
 		glBindVertexArray(0);
 		
+		float delta = 0;
 		while (!glfwWindowShouldClose(window))
 		{
+			long lastTime = System.nanoTime();
+			delta = lastTime - firstTime;
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			
 			glBindVertexArray(vaoId);
-			glColor3f(0.2f, 0.2f, 1f);
+			if(delta % 4e7 < 2e7)
+			{
+				glColor3f(0f, 0f, 1f);
+			}
+			else
+			{
+				glColor3f(1f, 0f, 0f);
+			}
+			
 			
 			glEnableVertexAttribArray(0);
 			
