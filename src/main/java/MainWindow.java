@@ -74,11 +74,19 @@ public class MainWindow
 			window.updateEvents();
 			window.clear();
 			
+			renderer.setColor(0f, 1f, 0f, 1f);
+			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0));
+			renderer.drawRoundedRectangle(40, 100, 100);
+			
+			renderer.setColor(0.6f, 0.6f, 1f, 1f);
+			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 0, 0));
+			renderer.drawRoundedRectangle(20, 80, 100);
+			
 			renderer.setTransformMatrix((new Matrix4f()).translate(200.f, 2.f, 0).scale(10));
 			renderer.drawRectangle();
 			
-			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 2.f, 0).scale(100));
-			renderer.draw(vertsArr);
+			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 2.f, 0).scale(10));
+			renderer.draw(vertsArr, Renderer.DrawTriangles);
 			window.update();
 		}
 	}

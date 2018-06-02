@@ -45,6 +45,15 @@ public class VertexArray
 		return new Vertex(m_Vertices.get(p_Index));
 	}
 	
+	public void move(float p_X, float p_Y)
+	{
+		for (Vertex i : m_Vertices)
+		{
+			i.position[0] += p_X;
+			i.position[1] += p_Y;
+		}
+	}
+	
 	/*
 	 * Generates and returns a float buffer for opengl to use
 	 */
