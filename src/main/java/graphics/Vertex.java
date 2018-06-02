@@ -1,4 +1,4 @@
-package rendering;
+package graphics;
 import java.util.Arrays;
 
 public class Vertex
@@ -40,7 +40,7 @@ public class Vertex
 	 */
 	public float[] getPosition()
 	{
-		return Arrays.copyOf(position, position.length);
+		return Arrays.copyOf(position, 2);
 	}
 	
 	/*

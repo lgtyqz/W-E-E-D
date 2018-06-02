@@ -1,14 +1,23 @@
 
-import rendering.*;
+import graphics.*;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import de.matthiasmann.twl.utils.PNGDecoder;
+import graphics.Vertex;
+import graphics.VertexArray;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.nio.*;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -16,6 +25,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+
 
 /*
  * TODO: Wrap most of the window fucntionality in the window class
@@ -29,15 +39,15 @@ public class MainWindow
 	
 	public void init()
 	{
-		long window;
 		glfwInit();
 		
-		window = glfwCreateWindow(300, 300, "pie", NULL, NULL);
 		
-		glfwMakeContextCurrent(window);
-		glfwSwapInterval(1);
-		glfwShowWindow(window);
+		Window window = new Window();
+		window.init(300, 300, "Pie is great");
+		
+		window.useGLContext();
 		GL.createCapabilities();
+		
 		glClearColor(1.0f, 0.7f, 0.7f, 0.0f);
 		
 		VertexArray vertsArr = new VertexArray();
@@ -48,6 +58,12 @@ public class MainWindow
 		vertsArr.add((new Vertex()).setPosition(0, 1));
 		vertsArr.add((new Vertex()).setPosition(0, 0));
 		
+		InputStream frag = getClass().getResourceAsStream("/shaders/basicShader.frag");
+		InputStream vert = getClass().getResourceAsStream("/shaders/basicShader.vert");
+		String fragStr = Util.readStreamAsString(frag);
+		String vertStr = Util.readStreamAsString(vert);
+		
+		Shader shader = new Shader(fragStr, vertStr);
 		
 		int vaoId = glGenVertexArrays();
 		glBindVertexArray(vaoId);
@@ -61,12 +77,17 @@ public class MainWindow
 		
 		glBindVertexArray(0);
 		
-		while (!glfwWindowShouldClose(window))
+		while (!window.closing())
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+			window.updateEvents();
+			window.clear();
 			
 			glBindVertexArray(vaoId);
 			glColor3f(0.2f, 0.2f, 1f);
+			
+			glPushMatrix();
+			glTranslatef(-0.5f, -0.5f, 0.f);
+			glRotatef(0.2f, 0f, 1.0f, 1.0f);
 			
 			glEnableVertexAttribArray(0);
 			
@@ -74,11 +95,9 @@ public class MainWindow
 			
 			glDisableVertexAttribArray(0);
 			glBindVertexArray(0);
+			glPopMatrix();
 
-			glfwSwapBuffers(window); // swap the color buffers
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			glfwPollEvents();
+			window.update();		
 		}
 	}
 }

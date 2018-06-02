@@ -1,4 +1,4 @@
-package rendering;
+package graphics;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 

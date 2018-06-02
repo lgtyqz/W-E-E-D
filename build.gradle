@@ -44,5 +44,8 @@ dependencies {
 	compile "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
 	compile "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
 	compile "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
+	
+	// PNGDecoder
+	compile group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
 }
 
