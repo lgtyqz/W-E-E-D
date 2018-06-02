@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class Vertex
 {
-	public float[] position = new float[] { 0f, 0f, 0f, 1f };
+	public float[] position = new float[] { 0f, 0f };
 	public float[] UV       = new float[] { 0f, 0f };
 	public float[] color    = new float[] { 1f, 1f, 1f, 1f };
 	
@@ -40,7 +40,7 @@ public class Vertex
 	 */
 	public float[] getPosition()
 	{
-		return Arrays.copyOf(position, 2);
+		return Arrays.copyOf(position, position.length);
 	}
 	
 	/*

@@ -1,13 +1,24 @@
 package graphics;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
+
+import java.nio.FloatBuffer;
+
+import org.joml.*;
 
 public class Shader
 {
 	private int m_ProgramGL;
 	private int m_VertexShaderGL;
 	private int m_FragmentShaderGL;
+	
+	public static final int PositionAttr = 0;
+	public static final int UVAttr = 1;
+	public static final int ColorAttr = 2;
+	
 	
 	public Shader() {}
 	
@@ -21,24 +32,59 @@ public class Shader
 		m_VertexShaderGL = compileShader(p_VertexShader, ARBVertexShader.GL_VERTEX_SHADER_ARB);
 		m_FragmentShaderGL = compileShader(p_FragmentShader, ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
 		
-		m_ProgramGL = ARBShaderObjects.glCreateProgramObjectARB();
-		ARBShaderObjects.glAttachObjectARB(m_ProgramGL, m_VertexShaderGL);
-		ARBShaderObjects.glAttachObjectARB(m_ProgramGL, m_FragmentShaderGL);
+		m_ProgramGL = glCreateProgram();
+		glAttachShader(m_ProgramGL, m_VertexShaderGL);
+		glAttachShader(m_ProgramGL, m_FragmentShaderGL);
 		
-		ARBShaderObjects.glLinkProgramARB(m_ProgramGL);
+		// Bind attributes
+		glBindAttribLocation(m_ProgramGL, PositionAttr, "in_Position");
+		glBindAttribLocation(m_ProgramGL, UVAttr, "in_UV");
+		glBindAttribLocation(m_ProgramGL, ColorAttr, "in_Color");
+		
+		glLinkProgram(m_ProgramGL);
 		if (ARBShaderObjects.glGetObjectParameteriARB(m_ProgramGL, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL_FALSE)
 		{
 			System.err.println(getLogInfo(m_ProgramGL));
 			return false;
 		}
 		
-		ARBShaderObjects.glValidateProgramARB(m_ProgramGL);
+		glValidateProgram(m_ProgramGL);
         if (ARBShaderObjects.glGetObjectParameteriARB(m_ProgramGL, ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE)
         {
             System.err.println(getLogInfo(m_ProgramGL));
             return false;
         }
 		return true;
+	}
+	
+	public void setUniform(String p_Name, Matrix4f p_Val)
+	{
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(4*4);
+		p_Val.get(buffer);
+		int location = glGetUniformLocation(m_ProgramGL, p_Name);
+		if (location < 0)
+		{
+			System.out.println("Failed to get uniform");
+			return;
+		}
+		glUseProgram(m_ProgramGL);
+		glUniformMatrix4fv(location, false, buffer);
+		glUseProgram(0);
+	}
+	
+	public void setUniform(String p_Name, Vector4f p_Val)
+	{
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+		p_Val.get(buffer);
+		int location = glGetUniformLocation(m_ProgramGL, p_Name);
+		if (location < 0)
+		{
+			System.out.println("Failed to get uniform");
+			return;
+		}
+		glUseProgram(m_ProgramGL);
+		glUniform4fv(location, buffer);
+		glUseProgram(0);
 	}
 	
 	public int getProgramGL()
@@ -49,15 +95,15 @@ public class Shader
 	private int compileShader(String p_Source, int p_ShaderType)
 	{
 		int shaderObj = 0;
-		shaderObj = ARBShaderObjects.glCreateShaderObjectARB(p_ShaderType);
-		ARBShaderObjects.glShaderSourceARB(shaderObj, p_Source);
-		ARBShaderObjects.glCompileShaderARB(shaderObj);
-		if (ARBShaderObjects.glGetObjectParameteriARB(shaderObj, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL_FALSE)
+		shaderObj = glCreateShader(p_ShaderType);
+		glShaderSource(shaderObj, p_Source);
+		glCompileShader(shaderObj);
+		if (glGetShaderi(shaderObj, GL_COMPILE_STATUS) == GL_FALSE)
 			throw new RuntimeException("Error compiling shader: " + getLogInfo(shaderObj));
 		return shaderObj;
 	}
 	
-	private String getLogInfo(int p_ShaderObject)
+	private static String getLogInfo(int p_ShaderObject)
 	{
 		return ARBShaderObjects.glGetInfoLogARB(p_ShaderObject, ARBShaderObjects.glGetObjectParameteriARB(p_ShaderObject, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB));
 	}

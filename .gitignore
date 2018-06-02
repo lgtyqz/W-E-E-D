@@ -3,5 +3,6 @@ build
 .gradle
 .classpath
 .project
-bin/
-.gradle/
+bin
+.gradle
+*.log

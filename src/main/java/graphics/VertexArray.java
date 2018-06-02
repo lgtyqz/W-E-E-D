@@ -16,6 +16,12 @@ public class VertexArray
 		return m_Vertices.add(new Vertex(p_Vertex));
 	}
 	
+	public boolean add(VertexArray p_Append)
+	{
+		m_FloatBufferNeedsUpdate = true;
+		return m_Vertices.addAll(p_Append.m_Vertices);
+	}
+	
 	public Vertex remove(int p_Index)
 	{
 		m_FloatBufferNeedsUpdate = true;
@@ -55,6 +61,7 @@ public class VertexArray
 		for (Vertex i : m_Vertices)
 		{
 			m_FloatBuffer.put(i.position);
+			m_FloatBuffer.put(i.UV);
 			m_FloatBuffer.put(i.color);
 		}
 		m_FloatBuffer.flip(); // Opengl expects the data to be flipped
