@@ -25,22 +25,25 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+//import javax.swing.Timer;
+//import java.awt.event.*;
 
 
 /*
  * TODO: Wrap most of the window fucntionality in the window class
  */
-public class MainWindow
+public class MainWindow //implements ActionListener
 {
+	//Timer timer;
 	public MainWindow()
 	{
 		GLFWErrorCallback.createPrint(System.err).set();
+		//Timer timer = new Timer(20, this);
 	}
 	
 	public void init()
 	{
 		glfwInit();
-		
 		
 		Window window = new Window();
 		window.init(300, 300, "Pie is great");
@@ -51,12 +54,12 @@ public class MainWindow
 		glClearColor(1.0f, 0.7f, 0.7f, 0.0f);
 		
 		VertexArray vertsArr = new VertexArray();
-		vertsArr.add((new Vertex()).setPosition(0, 0));
-		vertsArr.add((new Vertex()).setPosition(1, 0));
+		vertsArr.add((new Vertex()).setPosition(-1, -1));
+		vertsArr.add((new Vertex()).setPosition(-1, 1));
 		vertsArr.add((new Vertex()).setPosition(1, 1));
 		vertsArr.add((new Vertex()).setPosition(1, 1));
-		vertsArr.add((new Vertex()).setPosition(0, 1));
-		vertsArr.add((new Vertex()).setPosition(0, 0));
+		vertsArr.add((new Vertex()).setPosition(1, -1));
+		vertsArr.add((new Vertex()).setPosition(-1, -1));
 		
 		InputStream frag = getClass().getResourceAsStream("/shaders/basicShader.frag");
 		InputStream vert = getClass().getResourceAsStream("/shaders/basicShader.vert");
@@ -83,7 +86,15 @@ public class MainWindow
 			window.clear();
 			
 			glBindVertexArray(vaoId);
-			glColor3f(0.2f, 0.2f, 1f);
+			if(delta % 4e7 < 2e7)
+			{
+				glColor3f(0f, 0f, 1f);
+			}
+			else
+			{
+				glColor3f(1f, 0f, 0f);
+			}
+			
 			
 			glPushMatrix();
 			glTranslatef(-0.5f, -0.5f, 0.f);
