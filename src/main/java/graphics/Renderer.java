@@ -141,6 +141,21 @@ public class Renderer
 		draw(va, DrawTriangleFan);
 	}
 	
+	public void drawCircle(float p_Radius) {
+		//ayy lmao copied code
+		//don't know how well this would work
+		VertexArray topleftCorner = constructQuarterCircle(p_Radius, 5, 180f);
+		VertexArray toprightCorner = constructQuarterCircle(p_Radius, 5, 270f);
+		VertexArray bottomleftCorner = constructQuarterCircle(p_Radius, 5, 90f);
+		VertexArray bottomrightCorner = constructQuarterCircle(p_Radius, 5, 0f);
+		VertexArray va = new VertexArray();
+		va.add(topleftCorner);
+		va.add(toprightCorner);
+		va.add(bottomrightCorner);
+		va.add(bottomleftCorner);
+		draw(va, DrawTriangleFan);
+	}
+	
 	/*
 	 * Constructs a vertex array that represents a quarter of a circle.
 	 */
