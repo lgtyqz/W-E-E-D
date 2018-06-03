@@ -27,7 +27,6 @@ public class Shader
 	public static final int UVAttr = 1;
 	public static final int ColorAttr = 2;
 	
-	
 	public Shader() {}
 	
 	public Shader(String p_VertexShader, String p_FragmentShader)
@@ -67,8 +66,6 @@ public class Shader
 	
 	public void setUniform(String p_Name, Matrix4f p_Val)
 	{
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(4*4);
-		p_Val.get(buffer);
 		int location = glGetUniformLocation(m_ProgramGL, p_Name);
 		if (location < 0)
 		{
@@ -76,14 +73,12 @@ public class Shader
 			return;
 		}
 		glUseProgram(m_ProgramGL);
-		glUniformMatrix4fv(location, false, buffer);
+		glUniformMatrix4fv(location, false, p_Val.get(BufferUtils.createFloatBuffer(4*4)));
 		glUseProgram(0);
 	}
 	
 	public void setUniform(String p_Name, Vector4f p_Val)
 	{
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
-		p_Val.get(buffer);
 		int location = glGetUniformLocation(m_ProgramGL, p_Name);
 		if (location < 0)
 		{
@@ -91,7 +86,7 @@ public class Shader
 			return;
 		}
 		glUseProgram(m_ProgramGL);
-		glUniform4fv(location, buffer);
+		glUniform4fv(location, p_Val.get(BufferUtils.createFloatBuffer(4)));
 		glUseProgram(0);
 	}
 	

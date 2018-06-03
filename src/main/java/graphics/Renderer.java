@@ -237,6 +237,12 @@ public class Renderer
 		}
 	}
 	
+	public void resetDrawSettings()
+	{
+		m_FlatColorShader.setUniform("transformMatrix", new Matrix4f());
+		m_FlatColorShader.setUniform("tintColor", new Vector4f(1f, 1f, 1f, 1f));
+	}
+	
 	private void loadShaders()
 	{
 		System.out.println("Compiling shaders...");
@@ -247,10 +253,5 @@ public class Renderer
 		System.out.println("Done");
 	}
 	
-	public void resetDrawSettings()
-	{
-		m_FlatColorShader.setUniform("transformMatrix", new Matrix4f());
-		m_FlatColorShader.setUniform("tintColor", new Vector4f(1f, 1f, 1f, 1f));
-	}
 	
 }
