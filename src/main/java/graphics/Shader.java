@@ -9,12 +9,20 @@ import java.nio.FloatBuffer;
 
 import org.joml.*;
 
+/*
+ * This compiles a shader for gl to use.
+ * Mostly used internally in the renderer.
+ * You probably don't need to use this for anything else.
+ */
 public class Shader
 {
 	private int m_ProgramGL;
 	private int m_VertexShaderGL;
 	private int m_FragmentShaderGL;
 	
+	/*
+	 * Locations of the shader attributes.
+	 */
 	public static final int PositionAttr = 0;
 	public static final int UVAttr = 1;
 	public static final int ColorAttr = 2;

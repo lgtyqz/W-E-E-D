@@ -14,7 +14,6 @@ import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL20;
 
-
 public class Renderer
 {
 	private Window m_Window;
@@ -47,14 +46,44 @@ public class Renderer
 			"	pass_Color = in_Color;\r\n" + 
 			"}";
 	
+	private static final String strTextureFrag =
+			"#version 150 core\r\n" +
+			"uniform sampler2D textureDiffuse;\r\n" +
+			"uniform vec4 tintColor;\r\n" +
+			"in vec4 pass_Color;\r\n" + 
+			"in vec2 pass_TextureCoord;\r\n" + 
+			"out vec4 out_Color;\r\n" + 
+			"void main(void) {\r\n" + 
+			"	out_Color = pass_Color*tintColor*texture(textureDiffuse, pass_TextureCoord);\r\n" + 
+			"}\r\n";
+	
+	private static final String strTextureVert =
+			"#version 150 core\r\n" + 
+			"uniform mat4 viewMatrix;\r\n" +
+			"uniform mat4 transformMatrix;\r\n" +
+			"in vec2 in_Position;\r\n" + 
+			"in vec4 in_Color;\r\n" + 
+			"in vec4 in_UV;\r\n" + 
+			"out vec4 pass_Color;\r\n" + 
+			"out vec2 pass_TextureCoord;\r\n" + 
+			"void main(void)\r\n" + 
+			"{\r\n" + 
+			"	gl_Position = viewMatrix*transformMatrix*vec4(in_Position, 0.f, 1.f);\r\n" + 
+			"	pass_Color = in_Color;\r\n" + 
+			"	pass_TextureCoord = in_TextureCoord;\r\n" + 
+			"}";
+	
+	/*
+	 * These tell the draw method how to draw the vertices
+	 */
 	public static final int DrawTriangles = 0;
 	public static final int DrawTriangleFan = 1;
-	
 	
 	public Renderer()
 	{
 		loadShaders();
 		
+		// Setup the rectangle vertex array for later use.
 		m_VABox = new VertexArray();
 		m_VABox.add((new Vertex()).setPosition(1, 1));
 		m_VABox.add((new Vertex()).setPosition(0, 1));
@@ -64,42 +93,57 @@ public class Renderer
 		m_VABox.add((new Vertex()).setPosition(0, 0));
 	}
 	
+	/*
+	 * Set the current window to render to.
+	 */
 	public void setWindow(Window p_Window)
 	{
 		m_Window = p_Window;
 	}
 	
+	/*
+	 * Set the transform matrix for the next draw.
+	 */
 	public void setTransformMatrix(Matrix4f p_Mat)
 	{
 		m_FlatColorShader.setUniform("transformMatrix", p_Mat);
 	}
 	
+	/*
+	 * Set the tint color for the next draw.
+	 */
 	public void setColor(float p_R, float p_G, float p_B, float p_A)
 	{
 		m_FlatColorShader.setUniform("tintColor", new Vector4f(p_R, p_G, p_B, p_A));
 	}
 	
+	/*
+	 * Draw a rounded rectangle.
+	 */
 	public void drawRoundedRectangle(float p_Radius, float p_Width, float p_Height)
 	{
-		VertexArray va = new VertexArray();
 		VertexArray topleftCorner = constructQuarterCircle(p_Radius, 5, 180f);
-		VertexArray topRightCorner = constructQuarterCircle(p_Radius, 5, 270f);
+		VertexArray toprightCorner = constructQuarterCircle(p_Radius, 5, 270f);
 		VertexArray bottomleftCorner = constructQuarterCircle(p_Radius, 5, 90f);
 		VertexArray bottomrightCorner = constructQuarterCircle(p_Radius, 5, 0f);
 		
 		topleftCorner.move(p_Radius, p_Radius);
-		topRightCorner.move(p_Width - p_Radius, p_Radius);
+		toprightCorner.move(p_Width - p_Radius, p_Radius);
 		bottomleftCorner.move(p_Radius, p_Height - p_Radius);
 		bottomrightCorner.move(p_Width - p_Radius, p_Height - p_Radius);
 		
+		VertexArray va = new VertexArray();
 		va.add(topleftCorner);
-		va.add(topRightCorner);
+		va.add(toprightCorner);
 		va.add(bottomrightCorner);
 		va.add(bottomleftCorner);
 		
 		draw(va, DrawTriangleFan);
 	}
 	
+	/*
+	 * Constructs a vertex array that represents a quarter of a circle.
+	 */
 	private static VertexArray constructQuarterCircle(float p_Radius, int p_Slices, float p_Angle)
 	{
 		VertexArray va = new VertexArray();
@@ -116,20 +160,24 @@ public class Renderer
 	}
 	
 	/*
-	 * Scale the transform matrix to set the size.
+	 * Scale the transform matrix to set the size of this rectangle.
 	 */
 	public void drawRectangle()
 	{
 		draw(m_VABox, DrawTriangles);
 	}
 	
+	/*
+	 * Draw a vertex array.
+	 */
 	public void draw(VertexArray p_VertexArray, int p_DrawType)
 	{
 		m_Window.useGLContext();
 		
 		// Update view. Use window size.
 		Matrix4f view = new Matrix4f();
-		view.ortho2D(0f, m_Window.getWidth(), m_Window.getHeight(), 0f);
+		// This makes everything work from top-left and in pixel coordinates
+		view.ortho2D(0f, m_Window.getHeight(), m_Window.getWidth(), 0f);
 		m_FlatColorShader.setUniform("viewMatrix", view);
 		
 		try {

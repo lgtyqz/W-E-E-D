@@ -11,6 +11,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
+/*
+ * Loads and handles a texture for gl rendering.
+ * Only PNG format is supported.
+ * TODO: Finish
+ */
 public class Texture
 {
 	private ByteBuffer m_Buffer;
@@ -18,6 +23,9 @@ public class Texture
 	
 	private int m_Width, m_Height;
 	
+	/*
+	 * Load a texture from an input stream.
+	 */
 	public boolean load(InputStream p_Stream)
 	{
 		try {

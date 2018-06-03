@@ -19,6 +19,4 @@ public class Util
 		}
 		return builder.toString();
 	}
-	
-	
 }
