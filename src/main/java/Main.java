@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 
 import graphics.*;
+import util.Clock;
 
 public class Main
 {
@@ -35,13 +36,12 @@ public class Main
 		System.out.println("Done");
 		
 		System.out.print("Running loop...");
-		
-		double lastTime = glfwGetTime(); // glfwGetTime returns seconds with high precision
+
+		Clock timeClock = new Clock();
+		Clock deltaClock = new Clock();
 		while (!window.closing())
 		{
-			final float currentTime = (float)glfwGetTime();
-			final float delta = (float)(currentTime - lastTime);
-			lastTime = currentTime;
+			final float delta = deltaClock.restart();
 			
 			// Handle events here
 			for (WindowEvent i : window.updateEvents())
@@ -51,7 +51,7 @@ public class Main
 					switch(i.key)
 					{
 					case GLFW_KEY_W:
-						System.out.println("W Key Event " + currentTime);
+						System.out.println("W Key Event " + timeClock.getElapse());
 						break;
 					}
 				}
@@ -59,7 +59,7 @@ public class Main
 			window.clear();
 			
 			renderer.setColor(0f, 1f, 0f, 1f);
-			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*currentTime));
+			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*timeClock.getElapse()));
 			renderer.drawRoundedRectangle(40, 100, 100);
 			
 			renderer.setColor(0.6f, 0.6f, 1f, 1f);

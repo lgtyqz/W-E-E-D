@@ -28,6 +28,9 @@ public class Window
 	{
 		System.out.print("Init window...");
 		glfwInit();
+		
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		m_WindowHandle = glfwCreateWindow(p_Width, p_Height, p_Title, NULL, NULL);
 		
 		glfwSetKeyCallback(m_WindowHandle, (window, key, scancode, action, mods) -> {
