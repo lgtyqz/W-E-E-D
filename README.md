@@ -3,4 +3,4 @@ the good ol' game of weeds
 
 
 
-<sub><sup>I love how the download folder name is W-E-E-D-master :cryinglaughing:</sup></sub>
+<sub><sup>I love how the download folder name is W-E-E-D-master 😂</sup></sub>
