@@ -92,10 +92,9 @@ public class Window
 	 */
 	public ArrayList<WindowEvent> updateEvents()
 	{
-		ArrayList<WindowEvent> ret = new ArrayList<WindowEvent>(m_Events);
 		m_Events.clear();
 		glfwPollEvents();
-		return ret;
+		return new ArrayList<WindowEvent>(m_Events);
 	}
 	
 	/*
