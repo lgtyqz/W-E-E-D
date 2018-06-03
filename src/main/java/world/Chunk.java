@@ -8,7 +8,8 @@ import java.util.Arrays;
 public class Chunk
 {
 	private Tile[] m_Tiles;
-	private int[] m_Offset = { 0, 0 };
+	private Entity[] m_Entities; //For holding players & enemies
+	private int[] m_Offset = { 0, 0 }; // To know which chunk it is
 	
 	/*
 	 * Amount of tiles in one row (or one column).

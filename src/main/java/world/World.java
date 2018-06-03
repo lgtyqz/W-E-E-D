@@ -13,4 +13,7 @@ public class World
 	{
 		return null;
 	}
+	public Tile setTile(int p_X, int p_Y, Tile p_Tile) {
+		return null;
+	}
 }
