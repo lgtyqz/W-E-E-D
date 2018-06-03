@@ -66,4 +66,19 @@ public class Chunk
 	{
 		return Arrays.copyOf(m_Offset, m_Offset.length);
 	}
+	
+	public Tile IDtoTile(int id) {
+		Tile mail;
+		switch(id) {
+		case 0:
+			mail =  new EmptyTile();
+		break;
+		case 1:
+			mail =  new WeedTile();
+		break;
+		default:
+			mail = new EmptyTile();
+		}
+		return mail;
+	}
 }

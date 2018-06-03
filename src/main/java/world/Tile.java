@@ -14,5 +14,6 @@ public interface Tile
 	 * Player will be unable to move to this tile if this returns true.
 	 */
 	public boolean isObstacle();
+	public int tileId();
 	
 }

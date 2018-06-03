@@ -14,4 +14,6 @@ public class EmptyTile implements Tile
 	{
 		return false;
 	}
+	@Override
+	public int tileId() { return 0; };
 }

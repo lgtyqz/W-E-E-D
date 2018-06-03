@@ -13,5 +13,5 @@ public class WeedTile implements Tile {
 		//No walking through the weeds
 		return true;
 	}
-
+	public int tileId() { return 1; }
 }
