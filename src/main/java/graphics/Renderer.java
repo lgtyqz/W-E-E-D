@@ -103,6 +103,7 @@ public class Renderer
 	
 	/*
 	 * Set the transform matrix for the next draw.
+	 * Note: This is reset after every draw.
 	 */
 	public void setTransformMatrix(Matrix4f p_Mat)
 	{
@@ -111,6 +112,7 @@ public class Renderer
 	
 	/*
 	 * Set the tint color for the next draw.
+	 * Note: This is reset after every draw.
 	 */
 	public void setColor(float p_R, float p_G, float p_B, float p_A)
 	{
@@ -141,6 +143,9 @@ public class Renderer
 		draw(va, DrawTriangleFan);
 	}
 	
+	/*
+	 * Draw a Circle.
+	 */
 	public void drawCircle(float p_Radius)
 	{
 		VertexArray circle = constructArc(p_Radius, 20, 0f, 360f);
