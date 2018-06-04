@@ -20,8 +20,20 @@ public class Clock
 	}
 	
 	/*
+	 * Set elapse time in seconds.
+	 * Returns previous elapse.
+	 */
+	public float setElapse(float p_Seconds)
+	{
+		double currentTime = glfwGetTime();
+		float elapse = (float)(currentTime - m_StartTime);
+		m_StartTime = currentTime - p_Seconds;
+		return elapse;
+	}
+	
+	/*
 	 * Restart clock.
-	 * Returns elapse before restarting in seconds.
+	 * Returns the previous elapse in seconds.
 	 */
 	public float restart()
 	{

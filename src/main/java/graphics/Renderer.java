@@ -122,10 +122,10 @@ public class Renderer
 	 */
 	public void drawRoundedRectangle(float p_Radius, float p_Width, float p_Height)
 	{
-		VertexArray topleftCorner = constructQuarterCircle(p_Radius, 5, 180f);
-		VertexArray toprightCorner = constructQuarterCircle(p_Radius, 5, 270f);
-		VertexArray bottomleftCorner = constructQuarterCircle(p_Radius, 5, 90f);
-		VertexArray bottomrightCorner = constructQuarterCircle(p_Radius, 5, 0f);
+		VertexArray topleftCorner = constructArk(p_Radius, 5, 180f, 90f);
+		VertexArray toprightCorner = constructArk(p_Radius, 5, 270f, 90f);
+		VertexArray bottomleftCorner = constructArk(p_Radius, 5, 90f, 90f);
+		VertexArray bottomrightCorner = constructArk(p_Radius, 5, 0f, 90f);
 		
 		topleftCorner.move(p_Radius, p_Radius);
 		toprightCorner.move(p_Width - p_Radius, p_Radius);
@@ -141,30 +141,21 @@ public class Renderer
 		draw(va, DrawTriangleFan);
 	}
 	
-	public void drawCircle(float p_Radius) {
-		//ayy lmao copied code
-		//don't know how well this would work
-		VertexArray topleftCorner = constructQuarterCircle(p_Radius, 5, 180f);
-		VertexArray toprightCorner = constructQuarterCircle(p_Radius, 5, 270f);
-		VertexArray bottomleftCorner = constructQuarterCircle(p_Radius, 5, 90f);
-		VertexArray bottomrightCorner = constructQuarterCircle(p_Radius, 5, 0f);
-		VertexArray va = new VertexArray();
-		va.add(topleftCorner);
-		va.add(toprightCorner);
-		va.add(bottomrightCorner);
-		va.add(bottomleftCorner);
-		draw(va, DrawTriangleFan);
+	public void drawCircle(float p_Radius)
+	{
+		VertexArray circle = constructArk(p_Radius, 20, 0f, 360f);
+		draw(circle, DrawTriangleFan);
 	}
 	
 	/*
-	 * Constructs a vertex array that represents a quarter of a circle.
+	 * Constructs a vertex array that represents a part of a circle.
 	 */
-	private static VertexArray constructQuarterCircle(float p_Radius, int p_Slices, float p_Angle)
+	private static VertexArray constructArk(float p_Radius, int p_Slices, float p_FromAngle, float p_Angle)
 	{
 		VertexArray va = new VertexArray();
 		for (int i = 0; i < p_Slices + 1; i++)
 		{
-			double rads = Math.toRadians(p_Angle + (float)i*(90.f/p_Slices));
+			double rads = Math.toRadians(p_FromAngle + (float)i*(p_Angle/p_Slices));
 			float c = (float)Math.cos(rads);
 			float s = (float)Math.sin(rads);
 			float x = p_Radius*c;

@@ -144,7 +144,8 @@ public class Window
 	}
 	
 	public int getWidth()
-	{	try (MemoryStack stack = MemoryStack.stackPush())
+	{
+		try (MemoryStack stack = MemoryStack.stackPush())
 		{
 			IntBuffer width = stack.mallocInt(1);
 			glfwGetFramebufferSize(m_WindowHandle, width, null);
@@ -153,7 +154,8 @@ public class Window
 	}
 	
 	public int getHeight()
-	{	try (MemoryStack stack = MemoryStack.stackPush())
+	{
+		try (MemoryStack stack = MemoryStack.stackPush())
 		{
 			IntBuffer height = stack.mallocInt(1);
 			glfwGetFramebufferSize(m_WindowHandle, null, height);

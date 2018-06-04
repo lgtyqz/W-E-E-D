@@ -3,6 +3,8 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.*;
 
 import graphics.*;
 import util.Clock;
@@ -36,6 +38,7 @@ public class Main
 		System.out.println("Done");
 		
 		System.out.print("Running loop...");
+		
 
 		Clock timeClock = new Clock();
 		Clock deltaClock = new Clock();
@@ -71,6 +74,9 @@ public class Main
 			
 			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 2.f, 0).scale(10));
 			renderer.draw(vertsArr, Renderer.DrawTriangles);
+			
+			renderer.setTransformMatrix((new Matrix4f()).translate(200.f, 200.f, 0));
+			renderer.drawCircle(100);
 			window.update();
 		}
 	}
