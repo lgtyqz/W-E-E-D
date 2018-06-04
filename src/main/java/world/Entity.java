@@ -8,7 +8,7 @@ public class Entity {
 	private float moveTimer = 0;
 	private boolean dead = false;
 	private int moveCount = 0;
-	Player target;
+	private Player target;
 	
 	public void setPosition(int[] p_position) {m_position = p_position; };
 	public int[] getPosition() { return m_position; };
@@ -16,6 +16,11 @@ public class Entity {
 	public void setTimer(long p_moveTimer) { moveTimer = p_moveTimer; };
 	public boolean isAlive() { return dead; }
 	public void kill() { dead = true; }
+	public int getMoveCount() { return moveCount; }
+	public void setMoveCount(int p_NewCount) { moveCount = p_NewCount; }
+	public void incrementMoves() { moveCount++; }
+	public Player getTarget() { return target; }
+	
 	public void displace(int x, int y, World p_World) {
 		if(!p_World.getTile(m_position[0] + x, m_position[1] + y).isObstacle()
 				&& moveTimer == refractoryPeriod)
@@ -26,7 +31,6 @@ public class Entity {
 			m_position[1] += y;
 			timeLeft = (long)1e10; //Reset lifespan
 			moveTimer = 0; //Commence delay
-			moveCount++;
 		}
 	}
 	public void handleTimers(float change) {
@@ -39,9 +43,12 @@ public class Entity {
 			kill();
 		}
 	}
-	public void draw(Renderer r, World p_World) {
+	public void draw(Renderer r) {
 		//draw stuff here
 		//handleTimers();
+	}
+	public void update(World p_World) {
+		
 	}
 	public double distance(int[] pos1, int[] pos2) {
 		return Math.sqrt(
@@ -66,6 +73,36 @@ public class Entity {
 						minDist = distance(target.getPosition(), newPosition);
 						minSquares[0] = j;
 						minSquares[1] = i;
+					}
+				}
+			}
+			if(minDist < 20) {
+				displace(minSquares[0], minSquares[1], p_World);
+			}else {
+				target = null;
+			}
+		}
+	}
+	public void huntOrtho(double minDist, World p_World) {
+		//minDist is minimum seeing distance
+		//Make sure it's targeting SOMETHING and that it's good to move
+		if(!target.equals(null) && moveTimer == refractoryPeriod) {
+			// Relative coords of closest tile to player
+			int[] minSquares = {-1, -1};
+			minDist = 20; //Minimum sight range
+			//Figure out which square is the closest to the player
+			for(int i = -1; i <= 1; i++) {
+				for(int j = -1; j <= 1; j++) {
+					if(i == 0 || j == 0) {
+						int[] newPosition = {getPosition()[0] + j,
+											getPosition()[1] + i};
+						if(distance(target.getPosition(), newPosition) 
+								< minDist) {
+							minDist = distance(target.getPosition(),
+									newPosition);
+							minSquares[0] = j;
+							minSquares[1] = i;
+						}
 					}
 				}
 			}

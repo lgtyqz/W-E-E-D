@@ -70,14 +70,19 @@ public class Player extends Entity {
 	}
 	
 	@Override
-	public void draw(Renderer r, World p_World) {
+	public void draw(Renderer r) {
 		//draw blue rounded rect, with a dot
 		r.setColor(0f, 0.5f, 1f, 1f);
 		// TODO: insert matrix transformation here (Please use TODO. It's pretty much a universal standard. ~ Michael)
 		r.drawRoundedRectangle(5, 40, 40);
 		r.setColor(1f, 1f, 1f, 1f);
 		// [reset matrix transformation]
-		// [make another one]
+		// [make another one] <- based on facing
 		r.drawCircle(5);
+	}
+	
+	@Override
+	public void update(World p_World) {
+		
 	}
 }
