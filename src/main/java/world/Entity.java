@@ -113,6 +113,20 @@ public class Entity {
 			}
 		}
 	}
+	public boolean dig(World p_World, int p_dX, int p_dY) {
+		if(p_World.getTile(getPosition()[0] + p_dX,
+							getPosition()[1] + p_dY).tileId() == 1){
+			//Is it a weed?
+			p_World.setTile(getPosition()[0] + p_dX,
+					getPosition()[1] + p_dY, new EmptyTile());
+			//Kill it with F I R E
+			//also reset refractoryPeriod
+			moveTimer = 0;
+			//TODO: spawn drawn particles
+			return true;
+		}
+		return false;
+	}
 	public void setTarget(World p_World) {
 		//something about going through all the players available and picking
 		//the closest one if they're in range

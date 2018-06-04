@@ -61,10 +61,6 @@ public class Main
 			}
 			window.clear();
 			
-			renderer.setColor(0f, 1f, 0f, 1f);
-			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*timeClock.getElapse()));
-			renderer.drawRoundedRectangle(40, 100, 100);
-			
 			renderer.setColor(0.6f, 0.6f, 1f, 1f);
 			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 0, 0));
 			renderer.drawRoundedRectangle(20, 80, 100);
@@ -77,6 +73,10 @@ public class Main
 			
 			renderer.setTransformMatrix((new Matrix4f()).translate(200.f, 200.f, 0));
 			renderer.drawCircle(100);
+			
+			renderer.setColor(0f, 1f, 0f, 1f);
+			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*timeClock.getElapse()));
+			renderer.drawRoundedRectangle(3, 25, 25);
 			window.update();
 		}
 	}

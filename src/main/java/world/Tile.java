@@ -1,5 +1,5 @@
 package world;
-
+import graphics.Renderer;
 /*
  * Represents a single tile.
  */
@@ -15,5 +15,5 @@ public interface Tile
 	 */
 	public boolean isObstacle();
 	public int tileId();
-	
+	public void draw(Renderer r);
 }
