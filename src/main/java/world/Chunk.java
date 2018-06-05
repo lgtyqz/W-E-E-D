@@ -76,6 +76,9 @@ public class Chunk
 		case 1:
 			mail =  new WeedTile();
 		break;
+		case 999:
+			mail = new Stone();
+		break;
 		default:
 			mail = new EmptyTile();
 		}

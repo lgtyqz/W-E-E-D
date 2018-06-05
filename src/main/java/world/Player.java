@@ -1,6 +1,10 @@
 package world;
 import static org.lwjgl.glfw.GLFW.*;
 
+import org.joml.Matrix4f;
+import java.util.Map;
+import java.util.HashMap;
+
 import graphics.Renderer;
 public class Player extends Entity {
 	/*
@@ -10,8 +14,15 @@ public class Player extends Entity {
 	public static final int facingRight = 1;
 	public static final int facingUp = 2;
 	public static final int facingDown = 3;
+	/*
+	 * Item names in hashmap
+	 */
+	public static final String shovels = "shovels";
+	public static final String bombs = "bombs";
+	public static final String freezes = "freezes";
 	
 	private int facing;
+	Map<String, Integer> items = new HashMap<String, Integer>();
 	
 	public Player(int x, int y) {
 		int[] newPos = {x, y};
@@ -52,6 +63,29 @@ public class Player extends Entity {
 			break;
 			}
 		break;
+		case GLFW_KEY_X:
+			switch(facing) {
+			case facingLeft:
+				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+					items.put(shovels, items.get(shovels) - 1);
+				}
+			break;
+			case facingRight:
+				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+					items.put(shovels, items.get(shovels) - 1);
+				}
+			break;
+			case facingUp:
+				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+					items.put(shovels, items.get(shovels) - 1);
+				}
+			break;
+			case facingDown:
+				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+					items.put(shovels, items.get(shovels) - 1);
+				}
+			break;
+			}
 		}
 	}
 	
@@ -70,14 +104,20 @@ public class Player extends Entity {
 	}
 	
 	@Override
-	public void draw(Renderer r, World p_World) {
+	public void draw(Renderer r) {
 		//draw blue rounded rect, with a dot
 		r.setColor(0f, 0.5f, 1f, 1f);
-		// TODO: insert matrix transformation here (Please use TODO. It's pretty much a universal standard. ~ Michael)
-		r.drawRoundedRectangle(5, 40, 40);
+		r.setTransformMatrix((new Matrix4f()).translate(100.f, 0, 0));
+		r.drawRoundedRectangle(3, 25, 25);
 		r.setColor(1f, 1f, 1f, 1f);
 		// [reset matrix transformation]
-		// [make another one]
+		// [make another one] <- based on facing
 		r.drawCircle(5);
+	}
+	
+	@Override
+	public void update(World p_World) {
+		//TODO: Go through entities, if touching enemy, kill the player
+		//TODO: Loop through entities, if touching item, pick up that item
 	}
 }

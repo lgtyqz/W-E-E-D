@@ -1,7 +1,8 @@
 package world;
-
+import graphics.Renderer;
 public class EmptyTile implements Tile
 {
+	public static final int ID = 0;
 	@Override
 	public void onPlayer()
 	{
@@ -15,5 +16,7 @@ public class EmptyTile implements Tile
 		return false;
 	}
 	@Override
-	public int tileId() { return 0; };
+	public int tileId() { return ID; };
+	@Override
+	public void draw(Renderer r) {}
 }

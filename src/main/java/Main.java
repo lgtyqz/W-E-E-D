@@ -92,10 +92,8 @@ public class Main
 			
 			renderer.setTransformMatrix((new Matrix4f()).translate(200.f, 200.f, 0));
 			renderer.drawCircle(100);
-
 			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 200.f, 0).scale(50));
 			renderer.drawImage(texture, null);
-			
 			window.update();
 		}
 	}
