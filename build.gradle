@@ -22,7 +22,6 @@ run {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-
 repositories {
     jcenter()
     mavenCentral()

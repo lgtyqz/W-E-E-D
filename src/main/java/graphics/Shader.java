@@ -23,9 +23,9 @@ public class Shader
 	/*
 	 * Locations of the shader attributes.
 	 */
-	public static final int PositionAttr = 0;
-	public static final int UVAttr = 1;
-	public static final int ColorAttr = 2;
+	public static final int POSITION_ATTR = 0;
+	public static final int UV_ATTR = 1;
+	public static final int COLOR_ATTR = 2;
 	
 	public Shader() {}
 	
@@ -44,9 +44,9 @@ public class Shader
 		glAttachShader(m_ProgramGL, m_FragmentShaderGL);
 		
 		// Bind attributes
-		glBindAttribLocation(m_ProgramGL, PositionAttr, "in_Position");
-		glBindAttribLocation(m_ProgramGL, UVAttr, "in_UV");
-		glBindAttribLocation(m_ProgramGL, ColorAttr, "in_Color");
+		glBindAttribLocation(m_ProgramGL, POSITION_ATTR, "in_Position");
+		glBindAttribLocation(m_ProgramGL, UV_ATTR, "in_UV");
+		glBindAttribLocation(m_ProgramGL, COLOR_ATTR, "in_Color");
 		
 		glLinkProgram(m_ProgramGL);
 		if (ARBShaderObjects.glGetObjectParameteriARB(m_ProgramGL, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL_FALSE)
@@ -87,6 +87,19 @@ public class Shader
 		}
 		glUseProgram(m_ProgramGL);
 		glUniform4fv(location, p_Val.get(BufferUtils.createFloatBuffer(4)));
+		glUseProgram(0);
+	}
+	
+	public void setUniform(String p_Name, Texture p_Texture)
+	{
+		int location = glGetUniformLocation(m_ProgramGL, p_Name);
+		if (location < 0)
+		{
+			System.out.println("Failed to get uniform");
+			return;
+		}
+		glUseProgram(m_ProgramGL);
+		glUniform1i(location, p_Texture.getTextureGL());
 		glUseProgram(0);
 	}
 	

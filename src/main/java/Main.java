@@ -1,10 +1,21 @@
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.*;
+
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL11.*;
 
 import graphics.*;
 import util.Clock;
@@ -23,6 +34,8 @@ public class Main
 		
 		window.useGLContext();
 		GL.createCapabilities();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
@@ -39,7 +52,9 @@ public class Main
 		
 		System.out.print("Running loop...");
 		
-
+		Texture texture = new Texture();
+		texture.loadResource("images/shovel.png");
+		
 		Clock timeClock = new Clock();
 		Clock deltaClock = new Clock();
 		while (!window.closing())
@@ -61,7 +76,7 @@ public class Main
 			}
 			window.clear();
 			
-			renderer.setColor(0f, 1f, 0f, 1f);
+			renderer.setColor(window.getCursorPosition()[0] > 100 ? 0f : 1f, 1f, 0f, 1f);
 			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*timeClock.getElapse()));
 			renderer.drawRoundedRectangle(40, 100, 100);
 			
@@ -73,10 +88,14 @@ public class Main
 			renderer.drawRectangle();
 			
 			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 2.f, 0).scale(10));
-			renderer.draw(vertsArr, Renderer.DrawTriangles);
+			renderer.draw(vertsArr, Renderer.DRAW_TRIANGLES);
 			
 			renderer.setTransformMatrix((new Matrix4f()).translate(200.f, 200.f, 0));
 			renderer.drawCircle(100);
+
+			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 200.f, 0).scale(50));
+			renderer.drawImage(texture, null);
+			
 			window.update();
 		}
 	}

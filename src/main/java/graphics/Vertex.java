@@ -22,6 +22,7 @@ public class Vertex
 	public Vertex(Vertex p_Copy)
 	{
 		position = p_Copy.getPosition();
+		UV = p_Copy.getUV();
 		color = p_Copy.getColor();
 	}
 	

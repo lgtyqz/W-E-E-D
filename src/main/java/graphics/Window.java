@@ -7,6 +7,7 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
@@ -123,6 +124,20 @@ public class Window
 	public void clear()
 	{
 		clear(0f, 0f, 0f);
+	}
+	
+	/*
+	 * Get position of cursor
+	 */
+	public float[] getCursorPosition()
+	{
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			DoubleBuffer x = stack.mallocDouble(1);
+			DoubleBuffer y = stack.mallocDouble(1);
+			glfwGetCursorPos(m_WindowHandle, x, y);
+			return new float[]{(float)x.get(0), (float)y.get(0)};
+		}
 	}
 	
 	/*

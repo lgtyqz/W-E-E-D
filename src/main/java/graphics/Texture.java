@@ -23,6 +23,14 @@ public class Texture
 	
 	private int m_Width, m_Height;
 	
+	public boolean loadResource(String p_FilePath)
+	{
+		InputStream stream = ClassLoader.getSystemResourceAsStream(p_FilePath);
+		if (stream == null)
+			return false;
+		return load(stream);
+	}
+	
 	/*
 	 * Load a texture from an input stream.
 	 */
@@ -50,10 +58,12 @@ public class Texture
 		// Make sure opengl understands that the image is contained in contiguous 1 byte components
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, 
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, 
 		        GL_RGBA, GL_UNSIGNED_BYTE, m_Buffer);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
 		return true;

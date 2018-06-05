@@ -1,13 +1,15 @@
 package graphics;
 
 
-import static org.lwjgl.opengl.GL30.*;
 
 import org.joml.Matrix4f;
+import org.joml.Rectanglef;
 import org.joml.Vector4f;
 
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.ARBShaderObjects;
@@ -20,6 +22,9 @@ public class Renderer
 	
 	private Shader m_FlatColorShader;
 	private Shader m_TextureShader;
+	
+	private Vector4f m_FillColor;
+	private Matrix4f m_TransformMatrix;
 	
 	private VertexArray m_VABox;
 	
@@ -38,7 +43,7 @@ public class Renderer
 			"uniform mat4 transformMatrix;\r\n" +
 			"in vec2 in_Position;\r\n" + 
 			"in vec4 in_Color;\r\n" + 
-			"in vec4 in_UV;\r\n" + 
+			"in vec2 in_UV;\r\n" + 
 			"out vec4 pass_Color;\r\n" + 
 			"void main(void)\r\n" + 
 			"{\r\n" + 
@@ -51,10 +56,10 @@ public class Renderer
 			"uniform sampler2D textureDiffuse;\r\n" +
 			"uniform vec4 tintColor;\r\n" +
 			"in vec4 pass_Color;\r\n" + 
-			"in vec2 pass_TextureCoord;\r\n" + 
+			"in vec2 pass_UV;\r\n" + 
 			"out vec4 out_Color;\r\n" + 
 			"void main(void) {\r\n" + 
-			"	out_Color = pass_Color*tintColor*texture(textureDiffuse, pass_TextureCoord);\r\n" + 
+			"	out_Color = pass_Color*tintColor*texture(textureDiffuse, pass_UV);\r\n" + 
 			"}\r\n";
 	
 	private static final String strTextureVert =
@@ -63,25 +68,27 @@ public class Renderer
 			"uniform mat4 transformMatrix;\r\n" +
 			"in vec2 in_Position;\r\n" + 
 			"in vec4 in_Color;\r\n" + 
-			"in vec4 in_UV;\r\n" + 
+			"in vec2 in_UV;\r\n" + 
 			"out vec4 pass_Color;\r\n" + 
-			"out vec2 pass_TextureCoord;\r\n" + 
+			"out vec2 pass_UV;\r\n" + 
 			"void main(void)\r\n" + 
 			"{\r\n" + 
 			"	gl_Position = viewMatrix*transformMatrix*vec4(in_Position, 0.f, 1.f);\r\n" + 
 			"	pass_Color = in_Color;\r\n" + 
-			"	pass_TextureCoord = in_TextureCoord;\r\n" + 
+			"	pass_UV = in_UV;\r\n" + 
 			"}";
 	
 	/*
 	 * These tell the draw method how to draw the vertices
 	 */
-	public static final int DrawTriangles = 0;
-	public static final int DrawTriangleFan = 1;
+	public static final int DRAW_TRIANGLES = GL_TRIANGLES;
+	public static final int DRAW_TRIANGLE_FAN = GL_TRIANGLE_FAN;
+	public static final int DRAW_LINE_STRIP = GL_LINE_STRIP;
 	
 	public Renderer()
 	{
-		loadShaders();
+		m_FillColor = new Vector4f(1f, 1f, 1f, 1f);
+		m_TransformMatrix = new Matrix4f();
 		
 		// Setup the rectangle vertex array for later use.
 		m_VABox = new VertexArray();
@@ -91,6 +98,8 @@ public class Renderer
 		m_VABox.add((new Vertex()).setPosition(1, 1));
 		m_VABox.add((new Vertex()).setPosition(1, 0));
 		m_VABox.add((new Vertex()).setPosition(0, 0));
+		
+		loadShaders();
 	}
 	
 	/*
@@ -98,6 +107,8 @@ public class Renderer
 	 */
 	public void setWindow(Window p_Window)
 	{
+		if (p_Window == null)
+			throw new NullPointerException();
 		m_Window = p_Window;
 	}
 	
@@ -107,7 +118,9 @@ public class Renderer
 	 */
 	public void setTransformMatrix(Matrix4f p_Mat)
 	{
-		m_FlatColorShader.setUniform("transformMatrix", p_Mat);
+		if (p_Mat == null)
+			throw new NullPointerException();
+		m_TransformMatrix.set(p_Mat);
 	}
 	
 	/*
@@ -116,7 +129,18 @@ public class Renderer
 	 */
 	public void setColor(float p_R, float p_G, float p_B, float p_A)
 	{
-		m_FlatColorShader.setUniform("tintColor", new Vector4f(p_R, p_G, p_B, p_A));
+		m_FillColor.set(p_R, p_G, p_B, p_A);
+	}
+	
+	/*
+	 * Set the tint color for the next draw.
+	 * Note: This is reset after every draw.
+	 */
+	public void setColor(Vector4f p_Color)
+	{
+		if (p_Color == null)
+			throw new NullPointerException();
+		m_FillColor.set(p_Color);
 	}
 	
 	/*
@@ -140,7 +164,7 @@ public class Renderer
 		va.add(bottomrightCorner);
 		va.add(bottomleftCorner);
 		
-		draw(va, DrawTriangleFan);
+		draw(va, DRAW_TRIANGLE_FAN);
 	}
 	
 	/*
@@ -149,7 +173,7 @@ public class Renderer
 	public void drawCircle(float p_Radius)
 	{
 		VertexArray circle = constructArc(p_Radius, 20, 0f, 360f);
-		draw(circle, DrawTriangleFan);
+		draw(circle, DRAW_TRIANGLE_FAN);
 	}
 	
 	/*
@@ -170,26 +194,50 @@ public class Renderer
 		return va;
 	}
 	
+	public void drawImage(Texture p_Texture, Rectanglef p_SubTexture)
+	{
+		VertexArray imageVA = new VertexArray();
+		imageVA.add((new Vertex()).setPosition(1, 1).setUV(1, 1));
+		imageVA.add((new Vertex()).setPosition(0, 1).setUV(0, 1));
+		imageVA.add((new Vertex()).setPosition(0, 0).setUV(0, 0));
+		imageVA.add((new Vertex()).setPosition(1, 1).setUV(1, 1));
+		imageVA.add((new Vertex()).setPosition(1, 0).setUV(1, 0));
+		imageVA.add((new Vertex()).setPosition(0, 0).setUV(0, 0));
+		draw(imageVA, DRAW_TRIANGLES, p_Texture, true);
+	}
+	
 	/*
 	 * Scale the transform matrix to set the size of this rectangle.
 	 */
 	public void drawRectangle()
 	{
-		draw(m_VABox, DrawTriangles);
+		draw(m_VABox, DRAW_TRIANGLES);
+	}
+	
+	
+	public void draw(VertexArray p_VertexArray, int p_DrawType)
+	{
+		draw(p_VertexArray, p_DrawType, null, true);
 	}
 	
 	/*
 	 * Draw a vertex array.
 	 */
-	public void draw(VertexArray p_VertexArray, int p_DrawType)
+	private void draw(VertexArray p_VertexArray, int p_DrawType, Texture p_Texture, boolean p_ResetDrawSettings)
 	{
 		m_Window.useGLContext();
 		
-		// Update view. Use window size.
+		final Shader currentShader = p_Texture == null ? m_FlatColorShader : m_TextureShader;
+		
+		// Update the view. Use window size.
+		// Makes everything work from top-left and in pixel coordinates
 		Matrix4f view = new Matrix4f();
-		// This makes everything work from top-left and in pixel coordinates
 		view.ortho2D(0f, m_Window.getHeight(), m_Window.getWidth(), 0f);
-		m_FlatColorShader.setUniform("viewMatrix", view);
+		
+		// Update the shader's parameters
+		currentShader.setUniform("viewMatrix", view);
+		currentShader.setUniform("tintColor", m_FillColor);
+		currentShader.setUniform("transformMatrix", m_TransformMatrix);
 		
 		try {
 			int vaoId = glGenVertexArrays();
@@ -198,32 +246,32 @@ public class Renderer
 			int vboId = glGenBuffers();
 			glBindBuffer(GL_ARRAY_BUFFER, vboId);
 			glBufferData(GL_ARRAY_BUFFER, p_VertexArray.getFloatBuffer(), GL_STATIC_DRAW);
-			glVertexAttribPointer(Shader.PositionAttr, 2, GL_FLOAT, false, Vertex.totalSizeInBytes, 0);
-			glVertexAttribPointer(Shader.ColorAttr, 4, GL_FLOAT, false, Vertex.totalSizeInBytes, Vertex.elementSizeInBytes * 4);
+			glVertexAttribPointer(Shader.POSITION_ATTR, 2, GL_FLOAT, false, Vertex.totalSizeInBytes, 0);
+			glVertexAttribPointer(Shader.UV_ATTR, 2, GL_FLOAT, false, Vertex.totalSizeInBytes, Vertex.elementSizeInBytes * 2);
+			glVertexAttribPointer(Shader.COLOR_ATTR, 4, GL_FLOAT, false, Vertex.totalSizeInBytes, Vertex.elementSizeInBytes * 4);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			
 			glBindVertexArray(0);
 			
-			glUseProgram(m_FlatColorShader.getProgramGL());
+			glUseProgram(currentShader.getProgramGL());
+			
+			if (p_Texture != null)
+			{
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, p_Texture.getTextureGL());
+			}
+			
 			glBindVertexArray(vaoId);
 			
-			glEnableVertexAttribArray(Shader.PositionAttr);
-			glEnableVertexAttribArray(Shader.ColorAttr);
+			glEnableVertexAttribArray(Shader.POSITION_ATTR);
+			glEnableVertexAttribArray(Shader.UV_ATTR);
+			glEnableVertexAttribArray(Shader.COLOR_ATTR);
 			
-			int drawType = GL_TRIANGLES;
-			switch(p_DrawType)
-			{
-			case DrawTriangles:
-				drawType = GL_TRIANGLES;
-				break;
-			case DrawTriangleFan:
-				drawType = GL_TRIANGLE_FAN;
-				break;
-			}
-			glDrawArrays(drawType, 0, p_VertexArray.size());
+			glDrawArrays(p_DrawType, 0, p_VertexArray.size());
 			
-			glDisableVertexAttribArray(Shader.PositionAttr);
-			glDisableVertexAttribArray(Shader.ColorAttr);
+			glDisableVertexAttribArray(Shader.POSITION_ATTR);
+			glDisableVertexAttribArray(Shader.UV_ATTR);
+			glDisableVertexAttribArray(Shader.COLOR_ATTR);
 			
 			glBindVertexArray(0);
 			glUseProgram(0);
@@ -240,7 +288,8 @@ public class Renderer
 			glBindVertexArray(0);
 			glDeleteVertexArrays(vaoId);
 			
-			resetDrawSettings();
+			if (p_ResetDrawSettings)
+				resetDrawSettings();
 		} catch(Exception e)
 		{
 			e.printStackTrace();
@@ -250,14 +299,15 @@ public class Renderer
 	
 	public void resetDrawSettings()
 	{
-		m_FlatColorShader.setUniform("transformMatrix", new Matrix4f());
-		m_FlatColorShader.setUniform("tintColor", new Vector4f(1f, 1f, 1f, 1f));
+		m_FillColor.set(1f, 1f, 1f, 1f);
+		m_TransformMatrix.identity();
 	}
 	
 	private void loadShaders()
 	{
 		System.out.println("Compiling shaders...");
 		m_FlatColorShader = new Shader(strFlatColorVert, strFlatColorFrag);
+		m_TextureShader = new Shader(strTextureVert, strTextureFrag);
 		
 		resetDrawSettings();
 		
