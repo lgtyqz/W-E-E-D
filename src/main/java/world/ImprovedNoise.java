@@ -5,8 +5,8 @@ public final class ImprovedNoise
 	static public double noise(double x, double y, double z)
 	{
 		// Find unit cube that contains point.
-		int X = (int)Math.floor(x) & 255,                  // FIND UNIT CUBE THAT
-			Y = (int)Math.floor(y) & 255,                  // CONTAINS POINT.
+		int X = (int)Math.floor(x) & 255,
+			Y = (int)Math.floor(y) & 255,
 			Z = (int)Math.floor(z) & 255;
 		
 		// Find relative X, Y, and Z of point in cube
@@ -20,8 +20,8 @@ public final class ImprovedNoise
 		       w = fade(z);
 		
 		// Hash Coordinates of the 8 cube corners...
-		int A = p[X  ]+Y, AA = p[A]+Z, AB = p[A+1]+Z,      // HASH COORDINATES OF
-			B = p[X+1]+Y, BA = p[B]+Z, BB = p[B+1]+Z;      // THE 8 CUBE CORNERS,
+		int A = p[X  ]+Y, AA = p[A]+Z, AB = p[A+1]+Z,
+			B = p[X+1]+Y, BA = p[B]+Z, BB = p[B+1]+Z;
 		
 		// ...and add the blended results from 8 corners of the cube
 		return lerp(w, lerp(v, lerp(u, grad(p[AA  ], x  , y  , z   ),
