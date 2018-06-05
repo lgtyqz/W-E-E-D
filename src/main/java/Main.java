@@ -18,6 +18,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import graphics.*;
+import world.*;
 import util.Clock;
 
 public class Main
@@ -30,7 +31,10 @@ public class Main
 		glfwInit();
 		
 		Window window = new Window();
-		window.init(300, 300, "Pie is great");
+		window.init(400, 400, "Pie in the horse");
+		
+		Player mustafa = new Player(8, 8);
+		World braveNewWorld = new World(mustafa);
 		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
@@ -70,8 +74,8 @@ public class Main
 				}
 			}
 			window.clear();
-			
-			renderer.setColor(window.getCursorPosition()[0] > 100 ? 0f : 1f, 1f, 0f, 1f);
+			braveNewWorld.draw(renderer, window.getWidth(), window.getHeight());
+			/*renderer.setColor(window.getCursorPosition()[0] > 100 ? 0f : 1f, 1f, 0f, 1f);
 			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*timeClock.getElapse()));
 			renderer.drawRoundedRectangle(40, 100, 100);
 			
@@ -88,7 +92,8 @@ public class Main
 			renderer.setTransformMatrix((new Matrix4f()).translate(200.f, 200.f, 0));
 			renderer.drawCircle(100);
 			renderer.setTransformMatrix((new Matrix4f()).translate(2.f, 200.f, 0).scale(50));
-			renderer.drawImage(texture);
+			renderer.drawImage(texture);*/
+			
 			window.update();
 		}
 	}
