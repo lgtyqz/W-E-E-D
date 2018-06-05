@@ -2,7 +2,9 @@ from tkinter import *
 import math
 import random
 root = Tk()
-seed = hash("Don't catch you slippin'")
+superseed = "Don't catch you slippin'"
+seed = hash(superseed)
+random.seed(superseed)
 def perlin_noise(x, y, z):
     X = int(x) & 255                  # FIND UNIT CUBE THAT
     Y = int(y) & 255                  # CONTAINS POINT.
@@ -60,16 +62,70 @@ permutation = [151,160,137,91,90,15,
 for i in range(256):
     p[256+i] = p[i] = permutation[i]
 
+def pRNGsus(seed, j, i):
+    return int(seed * (j ^ i)) ^ 255
+
 active = False
 disp = Canvas(root, width=400, height=400, bg="white")
 disp.grid(row=0, column=0, columnspan=4)
+##for i in range(50):
+##    print(pRNGsus(seed, 100, i))
 for i in range(0, 100): 
     for j in range(0, 100):
-        result = perlin_noise(j/32, i/32, seed) * 128 + 128
-        colorList = [min(int(result * 2), 255), 0, 255 - int(result)]
+        result = min(int((perlin_noise(j/32, i/32, seed) * 128 + 128)),
+                     255)
+        enemyDeterminator = pRNGsus(seed, j, i)
+        if result > 140 or (60 > i > 40 and 40 < j < 60): # Not part of biome
+            colorList = [255, 255, 255]
+        elif result > 100: # Otherwise, part of biome - CANNOT SPAWN HERE
+            if result % 10 == 0:
+                # Weeds
+                colorList = [128, 64, 0]
+            else:
+                # Border enemies
+                r = random.random()
+                if r < 0.015:
+                    colorList = [255, 0, 0]
+                elif r < 0.02:
+                    colorList = [0, 255, 0]
+                else:
+                    colorList = [255, 255, 255]
+        elif result > 70:
+            if result % 6 == 0:
+                # Weeds
+                colorList = [128, 64, 0]
+                if result % 4 == 0:
+                    # Stones
+                    colorList = [100, 100, 100]
+            else:
+                # Border enemies
+                r = random.random()
+                if r < 0.01:
+                    colorList = [255, 0, 0]
+                elif r < 0.02:
+                    colorList = [0, 255, 0]
+                elif r < 0.035:
+                    # Powerup
+                    colorList = [0, 255, 255]
+                else:
+                    colorList = [255, 255, 255]
+        else:
+            # Rewards! and hard enemies
+            r = random.random()
+            if r < 0.05:
+                # Shovel
+                colorList = [0, 255, 255]
+            elif r < 0.06:
+                # Bomb
+                colorList = [0, 0, 0]
+            elif r < 0.063:
+                # Hard Enemy
+                colorList = [0, 0, 128]
+            else:
+                colorList = [255, 200, 255]
         #print(colorList)
         disp.create_rectangle(j * 4, i * 4, j * 4 + 4, i * 4 + 4,
-                                      fill=toHex(colorList))
+                                      fill=toHex(colorList), outline="#AAAAAA")
 disp.create_rectangle(200, 200, 204, 204,
-        fill="black", outline="")
+        fill="blue", outline="")
 root.mainloop()
