@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class World
 {
 	private ArrayList<Chunk> m_Chunks;
-	
+	private ArrayList<Entity> m_Entities;
 	/*
 	 * TODO: Returns tile in world position.
 	 */

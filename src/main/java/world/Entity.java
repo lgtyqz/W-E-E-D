@@ -120,8 +120,6 @@ public class Entity {
 			p_World.setTile(getPosition()[0] + p_dX,
 					getPosition()[1] + p_dY, new EmptyTile());
 			//Kill it with F I R E
-			//also reset refractoryPeriod
-			moveTimer = 0;
 			//TODO: spawn drawn particles
 			return true;
 		}

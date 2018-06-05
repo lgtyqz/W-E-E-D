@@ -17,11 +17,12 @@ public class Digger extends Entity {
 			setTarget(p_World);
 			huntOrtho(20.0, p_World);
 		}else {
-			for(int i = getPosition()[1] - 1; i < getPosition()[1] + 1; i++) {
-				for(int j = getPosition()[0]-1; j < getPosition()[0]+1; j++) {
-					p_World.setTile(j, i, new WeedTile());
+			for(int i = -1; i < 1; i++) {
+				for(int j = -1; j < 1; j++) {
+					dig(p_World, j, i);
 				}
 			}
+			incrementMoves(); //to switch back to hunt mode
 		}
 	}
 }
