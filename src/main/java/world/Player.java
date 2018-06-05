@@ -104,15 +104,19 @@ public class Player extends Entity {
 	}
 	
 	@Override
-	public void draw(Renderer r) {
+	public void draw(Renderer r, int[] cameraOffset) {
 		//draw blue rounded rect, with a dot
 		r.setColor(0f, 0.5f, 1f, 1f);
-		r.setTransformMatrix((new Matrix4f()).translate(100.f, 0, 0));
+		r.setTransformMatrix((new Matrix4f()).translate(
+				25 * (getPosition()[0] - cameraOffset[0]),
+				25 * (getPosition()[1] - cameraOffset[1]), 0));
 		r.drawRoundedRectangle(3, 25, 25);
-		r.setColor(1f, 1f, 1f, 1f);
-		// [reset matrix transformation]
+		/*r.setColor(1f, 1f, 1f, 1f);
+		r.setTransformMatrix((new Matrix4f()).translate(
+				25 * (getPosition()[0] - cameraOffset[0]),
+				25 * (getPosition()[1] - cameraOffset[1]), 0));
 		// [make another one] <- based on facing
-		r.drawCircle(5);
+		r.drawCircle(5);*/
 	}
 	
 	@Override

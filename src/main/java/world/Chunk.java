@@ -2,13 +2,17 @@ package world;
 
 import java.util.Arrays;
 
+import org.joml.Matrix4f;
+
+import java.util.ArrayList;
+import graphics.Renderer;
 /*
  * Chunks represent a section in the world.
  */
 public class Chunk
 {
 	private Tile[] m_Tiles;
-	private Entity[] m_Entities; //For holding players & enemies
+	private ArrayList<Entity> m_Entities; //For holding players & enemies
 	private int[] m_Offset = { 0, 0 }; // To know which chunk it is
 	
 	/*
@@ -24,6 +28,7 @@ public class Chunk
 	public Chunk()
 	{
 		fillBlankTiles();
+		m_Entities = new ArrayList<Entity>();
 	}
 	
 	/*
@@ -83,5 +88,21 @@ public class Chunk
 			mail = new EmptyTile();
 		}
 		return mail;
+	}
+	
+	public void draw(Renderer r, int[] cameraOffset) {
+		for(int i = 0; i < RowTileCount; i++) {
+			for(int j = 0; j < RowTileCount; j++) {
+				r.setTransformMatrix((new Matrix4f()).translate(
+						25 * (j - cameraOffset[0]), 25 * (i - cameraOffset[1]), 0));
+				Tile tileAt = getTile(j, i);
+				if(!(tileAt instanceof EmptyTile)) {
+					tileAt.draw(r, cameraOffset);
+				}
+			}
+		}
+		for(int i = 0; i < m_Entities.size(); i++) {
+			m_Entities.get(i).draw(r, cameraOffset);
+		}
 	}
 }

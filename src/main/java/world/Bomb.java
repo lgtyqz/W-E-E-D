@@ -4,7 +4,7 @@ import graphics.Renderer;
 public class Bomb extends Entity {
 	private float bombTimer = 3;
 	@Override
-	public void draw(Renderer r) {
+	public void draw(Renderer r, int[] cameraOffset) {
 		//TODO: draw bomb texture
 	}
 	@Override

@@ -15,5 +15,5 @@ public interface Tile
 	 */
 	public boolean isObstacle();
 	public int tileId();
-	public void draw(Renderer r);
+	public void draw(Renderer r, int[] cameraOffset);
 }

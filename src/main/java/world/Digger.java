@@ -1,11 +1,15 @@
 package world;
+import org.joml.Matrix4f;
+
 import graphics.Renderer;
 public class Digger extends Entity {
 	@Override
-	public void draw(Renderer r) {
+	public void draw(Renderer r, int[] cameraOffset) {
 		//draw GREEN rounded rect
 		r.setColor(0f, 1f, 0f, 1f);
-		// [insert matrix transformation here]
+		r.setTransformMatrix((new Matrix4f()).translate(
+				25 * (getPosition()[0] - cameraOffset[0]),
+				25 * (getPosition()[1] - cameraOffset[1]), 0));
 		r.drawRoundedRectangle(5, 40, 40);
 	}
 	@Override

@@ -43,7 +43,7 @@ public class Entity {
 			kill();
 		}
 	}
-	public void draw(Renderer r) {
+	public void draw(Renderer r, int[] cameraOffset) {
 		//draw stuff here
 		//handleTimers();
 	}
