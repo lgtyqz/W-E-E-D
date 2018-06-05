@@ -92,13 +92,12 @@ public class Renderer
 		
 		// Setup the rectangle vertex array for later use.
 		m_VABox = new VertexArray();
-		m_VABox.add((new Vertex()).setPosition(1, 1));
-		m_VABox.add((new Vertex()).setPosition(0, 1));
-		m_VABox.add((new Vertex()).setPosition(0, 0));
-		m_VABox.add((new Vertex()).setPosition(1, 1));
-		m_VABox.add((new Vertex()).setPosition(1, 0));
-		m_VABox.add((new Vertex()).setPosition(0, 0));
-		
+		m_VABox.add((new Vertex()).setPosition(1, 1).setUV(1, 1));
+		m_VABox.add((new Vertex()).setPosition(0, 1).setUV(0, 1));
+		m_VABox.add((new Vertex()).setPosition(0, 0).setUV(0, 0));
+		m_VABox.add((new Vertex()).setPosition(1, 1).setUV(1, 1));
+		m_VABox.add((new Vertex()).setPosition(1, 0).setUV(1, 0));
+		m_VABox.add((new Vertex()).setPosition(0, 0).setUV(0, 0));
 		loadShaders();
 	}
 	
@@ -194,16 +193,9 @@ public class Renderer
 		return va;
 	}
 	
-	public void drawImage(Texture p_Texture, Rectanglef p_SubTexture)
+	public void drawImage(Texture p_Texture)
 	{
-		VertexArray imageVA = new VertexArray();
-		imageVA.add((new Vertex()).setPosition(1, 1).setUV(1, 1));
-		imageVA.add((new Vertex()).setPosition(0, 1).setUV(0, 1));
-		imageVA.add((new Vertex()).setPosition(0, 0).setUV(0, 0));
-		imageVA.add((new Vertex()).setPosition(1, 1).setUV(1, 1));
-		imageVA.add((new Vertex()).setPosition(1, 0).setUV(1, 0));
-		imageVA.add((new Vertex()).setPosition(0, 0).setUV(0, 0));
-		draw(imageVA, DRAW_TRIANGLES, p_Texture, true);
+		draw(m_VABox, DRAW_TRIANGLES, p_Texture, true);
 	}
 	
 	/*

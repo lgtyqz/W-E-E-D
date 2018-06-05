@@ -32,11 +32,6 @@ public class Main
 		Window window = new Window();
 		window.init(300, 300, "Pie is great");
 		
-		window.useGLContext();
-		GL.createCapabilities();
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
 		
