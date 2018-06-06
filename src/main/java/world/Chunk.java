@@ -31,6 +31,11 @@ public class Chunk
 		m_Entities = new ArrayList<Entity>();
 	}
 	
+	public void serverInitialization(Player focus) {
+		//Step 1: Load chunk position from focus coords
+		m_Offset = focus.getPosition();
+	}
+	
 	/*
 	 * Fill the entire chunk with empty tiles.
 	 */
@@ -94,7 +99,8 @@ public class Chunk
 		for(int i = 0; i < RowTileCount; i++) {
 			for(int j = 0; j < RowTileCount; j++) {
 				r.setTransformMatrix((new Matrix4f()).translate(
-						25 * (j - cameraOffset[0]), 25 * (i - cameraOffset[1]), 0));
+						25 * (j - cameraOffset[0] + m_Offset[0]),
+						25 * (i - cameraOffset[1] + m_Offset[1]), 0));
 				Tile tileAt = getTile(j, i);
 				if(!(tileAt instanceof EmptyTile)) {
 					tileAt.draw(r, cameraOffset);
