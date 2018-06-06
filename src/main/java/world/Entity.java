@@ -23,7 +23,7 @@ public class Entity {
 	
 	public void displace(int x, int y, World p_World) {
 		Tile tile = p_World.getTile(m_position[0] + x, m_position[1] + y);
-		if(tile != null && !tile.isObstacle() && moveTimer == refractoryPeriod)
+		if(tile != null && !tile.isObstacle())
 		{
 			//Spawn weed
 			p_World.setTile(m_position[0], m_position[1], new WeedTile());
@@ -32,6 +32,8 @@ public class Entity {
 			timeLeft = (long)1e10; //Reset lifespan
 			moveTimer = 0; //Commence delay
 		}
+		else
+			System.out.println(tile == null);
 	}
 	public void handleTimers(float change) {
 		if(moveTimer < refractoryPeriod) {
@@ -59,7 +61,7 @@ public class Entity {
 	public void hunt8Way(double minDist, World p_World) {
 		//minDist is minimum seeing distance
 		//Make sure it's targeting SOMETHING and that it's good to move
-		if(target != null && moveTimer == refractoryPeriod) {
+		if(target != null) {
 			// Relative coords of closest tile to player
 			int[] minSquares = {-1, -1};
 			minDist = 20; //Minimum sight range
@@ -86,7 +88,7 @@ public class Entity {
 	public void huntOrtho(double minDist, World p_World) {
 		//minDist is minimum seeing distance
 		//Make sure it's targeting SOMETHING and that it's good to move
-		if(target != null && moveTimer == refractoryPeriod) {
+		if(target != null) {
 			// Relative coords of closest tile to player
 			int[] minSquares = {-1, -1};
 			minDist = 20; //Minimum sight range

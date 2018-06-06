@@ -74,6 +74,7 @@ public class World
 				chunk = new Chunk();
 				int[] offset = getChunkOffsetFromTilePosition(p_X, p_Y);
 				chunk.setOffset(offset[0], offset[1]);
+				//System.out.println("TECHNO GENERATION");
 				chunk.generate(m_Seed);
 				m_Chunks.add(chunk);
 			}
@@ -97,12 +98,13 @@ public class World
 		return null;
 	}
 	public void draw(Renderer r, int width, int height) {
+		cameraOffset[0] = focus.getPosition()[0] - Chunk.RowTileCount/2;
+		cameraOffset[1] = focus.getPosition()[1] - Chunk.RowTileCount/2;
 		for(Chunk i : m_Chunks) { i.draw(r, cameraOffset); }
 		
 		if (focus != null)
 			focus.draw(r, cameraOffset);
 		//TODO: adjust camera position
-		//cameraOffset[0] = focus.getPosition()[0];
 		for(Entity i : m_Entities) { i.draw(r, cameraOffset); }
 	}
 }

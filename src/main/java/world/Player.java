@@ -129,5 +129,6 @@ public class Player extends Entity {
 	public void update(World p_World) {
 		//TODO: Go through entities, if touching enemy, kill the player
 		//TODO: Loop through entities, if touching item, pick up that item
+		
 	}
 }

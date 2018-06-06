@@ -71,6 +71,7 @@ public class RemoteWorldConnection implements Runnable
 					
 					m_Writer.println(MessageUtil.RECIEVED_CHUNK);
 					Chunk chunk = m_World.ensureChunkExistence(pos[0], pos[1]);
+					//chunk.generate(seed);
 					MessageUtil.printChunk(m_Writer, chunk);
 					//lock.unlock();
 					break;

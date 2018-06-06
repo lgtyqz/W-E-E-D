@@ -52,8 +52,10 @@ public class Chunk
 		for(int i = 0; i < RowTileCount; i++) {
 			for(int j = 0; j < RowTileCount; j++) {
 				double result = Math.min(Math.floor(
-						ImprovedNoise.noise(m_Offset[0] + j,
-											m_Offset[1] + i, seed)), 255);
+						ImprovedNoise.noise((m_Offset[0] + j)/32.0,
+									(m_Offset[1] + i)/32.0, seed) * 128 + 128),
+						255);
+				System.out.println(result);
 				if(result <= 140 && result > 100) {
 					//Lower-level enemy spawn area
 					if(result % 10 == 0) {
