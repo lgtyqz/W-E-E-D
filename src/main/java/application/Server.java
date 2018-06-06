@@ -51,7 +51,7 @@ public class Server implements Application
 	{
 		m_ClientThreads = new ArrayList<RemoteWorldConnection>();
 		m_World = new World();
-		m_World.setSeed("pie is great");
+		m_World.setSeed("What the f**k did you just say to me, you little b***h?");
 	}
 
 	@Override

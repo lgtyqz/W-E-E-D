@@ -106,12 +106,13 @@ public class Player extends Entity {
 	private void effectSeedKaboom(World p_World, int p_OffsetX, int p_OffsetY)
 	{
 		int[] p = getPosition();
-		p[0] += p_OffsetX;
-		p[1] += p_OffsetY;
-		p_World.setTile(p[0] - 1, p[1], new WeedTile()); // Left
-		p_World.setTile(p[0] + 1, p[1], new WeedTile()); // Right
-		p_World.setTile(p[0], p[1] - 1, new WeedTile()); // Up
-		p_World.setTile(p[0], p[1] + 1, new WeedTile()); // Bottom
+		int[] q = {0, 0};
+		q[0] = p[0] + p_OffsetX;
+		q[1] = p[1] + p_OffsetY;
+		p_World.setTile(q[0] - 1, q[1], new WeedTile()); // Left
+		p_World.setTile(q[0] + 1, q[1], new WeedTile()); // Right
+		p_World.setTile(q[0], q[1] - 1, new WeedTile()); // Up
+		p_World.setTile(q[0], q[1] + 1, new WeedTile()); // Bottom
 	}
 	
 	@Override
