@@ -84,10 +84,14 @@ class MessageUtil
 				p_Writer.println(p_Chunk.getTile(x, y).getId());
 		
 		p_Writer.println(p_Chunk.getEntities().size());
+		System.out.println("Entities in chunk: " + p_Chunk.getEntities().size());
 		for(int e = 0; e < p_Chunk.getEntities().size(); e++) {
 			p_Writer.println(p_Chunk.getEntities().get(e).getPosition()[0]);
 			p_Writer.println(p_Chunk.getEntities().get(e).getPosition()[1]);
-			p_Writer.println(p_Chunk.getEntities().get(e).ID);
+			p_Writer.println(p_Chunk.getEntities().get(e).getID());
+			System.out.println(p_Chunk.getEntities().get(e).getPosition()[0]);
+			System.out.println(p_Chunk.getEntities().get(e).getPosition()[1]);
+			System.out.println(p_Chunk.getEntities().get(e).getID());
 		}
 	}
 }

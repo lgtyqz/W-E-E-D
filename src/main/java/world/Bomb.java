@@ -2,6 +2,7 @@ package world;
 import graphics.Renderer;
 
 public class Bomb extends Entity {
+	public static final int ID = 8008;
 	private float bombTimer = 3;
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {
@@ -28,4 +29,5 @@ public class Bomb extends Entity {
 			}
 		}
 	}
+	public static int getID() { return ID; }
 }

@@ -9,7 +9,7 @@ public class Entity {
 	private boolean dead = false;
 	private int moveCount = 0;
 	private Player target;
-	public int ID;
+	public static int ID = 22000;
 	
 	public void setPosition(int[] p_position) {m_position = p_position; }
 	public int[] getPosition() { return m_position; };
@@ -132,4 +132,5 @@ public class Entity {
 		//something about going through all the players available and picking
 		//the closest one if they're in range
 	}
+	public static int getID() { return ID; }
 }

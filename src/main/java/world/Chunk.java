@@ -58,7 +58,7 @@ public class Chunk
 						ImprovedNoise.noise((m_Offset[0] + j)/32.0,
 									(m_Offset[1] + i)/32.0, seed) * 128 + 128),
 						255);
-				System.out.println(result);
+				//System.out.println(result);
 				if(result <= 140 && result > 100) {
 					//Lower-level enemy spawn area
 					if(result % 10 == 0) {
