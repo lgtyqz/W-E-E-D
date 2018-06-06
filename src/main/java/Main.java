@@ -23,6 +23,10 @@ import util.Clock;
 
 public class Main
 {
+	static final int MAINMENU = 0;
+	static final int SPAWNING = 1;
+	static final int GAMEPLAY = 2;
+	static int gameState;
 	public static void main(String[] args)
 	{
 		// Tell glfw to print errors to the console
@@ -38,16 +42,6 @@ public class Main
 		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
-		
-		System.out.print("Setting up verts...");
-		VertexArray vertsArr = new VertexArray();
-		vertsArr.add((new Vertex()).setPosition(1, 1));
-		vertsArr.add((new Vertex()).setPosition(0, 1));
-		vertsArr.add((new Vertex()).setPosition(0, 0));
-		vertsArr.add((new Vertex()).setPosition(1, 1));
-		vertsArr.add((new Vertex()).setPosition(1, 0));
-		vertsArr.add((new Vertex()).setPosition(0, 0));
-		System.out.println("Done");
 		
 		System.out.print("Running loop...");
 		
@@ -74,7 +68,9 @@ public class Main
 				}
 			}
 			window.clear();
-			braveNewWorld.draw(renderer, window.getWidth(), window.getHeight());
+			if(gameState == GAMEPLAY) {
+				braveNewWorld.draw(renderer, window.getWidth(), window.getHeight());
+			}
 			/*renderer.setColor(window.getCursorPosition()[0] > 100 ? 0f : 1f, 1f, 0f, 1f);
 			renderer.setTransformMatrix((new Matrix4f()).translate(100.f, 100.f, 0).rotateZ((3.14f/3)*timeClock.getElapse()));
 			renderer.drawRoundedRectangle(40, 100, 100);
