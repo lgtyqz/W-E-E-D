@@ -35,6 +35,8 @@ public class Server implements Application
 				{
 					// Accept any new client connections
 					Socket socket = m_ServerSocket.accept();
+					
+					System.out.println("New client: " + socket);
 					RemoteWorldConnection remote = new RemoteWorldConnection(m_Server.m_World, socket);
 					remote.start(Integer.toString(m_ClientThreads.size()));
 					m_ClientThreads.add(remote);

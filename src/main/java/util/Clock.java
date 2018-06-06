@@ -11,6 +11,11 @@ public class Clock
 		restart();
 	}
 	
+	public Clock(Clock p_Copy)
+	{
+		m_StartTime = p_Copy.m_StartTime;
+	}
+	
 	/*
 	 * Get time from start in seconds.
 	 */
@@ -29,6 +34,11 @@ public class Clock
 		float elapse = (float)(currentTime - m_StartTime);
 		m_StartTime = currentTime - p_Seconds;
 		return elapse;
+	}
+	
+	public void setStartTime(double p_Time)
+	{
+		m_StartTime = p_Time;
 	}
 	
 	/*

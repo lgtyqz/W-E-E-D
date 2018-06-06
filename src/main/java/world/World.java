@@ -16,6 +16,7 @@ public class World
 	 * TODO: Returns tile in world position.
 	 */
 	public World() {
+		m_Remote = null;
 		m_Chunks = new ArrayList<Chunk>();
 		m_Entities = new ArrayList<Entity>();
 	}

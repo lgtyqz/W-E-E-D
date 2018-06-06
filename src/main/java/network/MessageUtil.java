@@ -19,15 +19,22 @@ class MessageUtil
 	 * int[2] offset
 	 * Chunkdata
 	 */
-	public static final int RECIEVED_CHUNK = 2;
+	public static final int RECIEVED_CHUNK = 1;
 	
 	/*
 	 * Structure:
 	 * int[2] Position
 	 * int Id
 	 */
-	public static final int TILE_CHANGED = 1;
+	public static final int TILE_CHANGED = 2;
 	
+	/*
+	 * Structure:
+	 * double timestamp
+	 */
+	public static final int SYNC_CLOCK = 3;
+	
+	public static final int REQUEST_SYNC_CLOCK = 3;
 	
 	public static int[] readIntArr(Scanner p_Scanner, int p_Size)
 	{
@@ -40,7 +47,7 @@ class MessageUtil
 	public static void printIntArr(PrintWriter p_Writer, int[] p_Arr)
 	{
 		for (int i = 0; i < p_Arr.length; i++)
-			p_Writer.print(p_Arr[i]);
+			p_Writer.println(p_Arr[i]);
 	}
 	
 	public static Chunk readChunk(Scanner p_Scanner)
@@ -66,6 +73,6 @@ class MessageUtil
 		// Read all the tiles
 		for (int x = 0; x < Chunk.RowTileCount; x++)
 			for (int y = 0; y < Chunk.RowTileCount; y++)
-				p_Writer.print(p_Chunk.getTile(x, y).getId());
+				p_Writer.println(p_Chunk.getTile(x, y).getId());
 	}
 }

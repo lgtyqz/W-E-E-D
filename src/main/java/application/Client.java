@@ -3,9 +3,13 @@ package application;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
+import java.io.IOException;
+import java.net.*;
+
 import org.lwjgl.glfw.*;
 
 import graphics.*;
+import network.*;
 import util.Clock;
 import world.*;
 
@@ -30,6 +34,17 @@ public class Client implements Application
 		
 		Player mustafa = new Player(8, 8);
 		World braveNewWorld = new World();
+		
+		Socket socket = null;
+		try {
+			socket = new Socket("localhost", 1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		RemoteWorldConnection remote = new RemoteWorldConnection(braveNewWorld, socket);
+		remote.start("Client Remote Thread");
+		braveNewWorld.setRemote(remote);
+		
 		braveNewWorld.setFocus(mustafa);
 		braveNewWorld.ensureChunkExistence(0, 0);
 		braveNewWorld.ensureChunkExistence(Chunk.RowTileCount + 1, 0);
