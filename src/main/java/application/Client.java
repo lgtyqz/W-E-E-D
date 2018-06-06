@@ -31,6 +31,8 @@ public class Client implements Application
 		Player mustafa = new Player(8, 8);
 		World braveNewWorld = new World();
 		braveNewWorld.setFocus(mustafa);
+		braveNewWorld.ensureChunkExistance(0, 0);
+		braveNewWorld.ensureChunkExistance(Chunk.RowTileCount + 1, 0);
 		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
@@ -46,7 +48,7 @@ public class Client implements Application
 			{
 				if (i.key >= 0)
 				{
-					switch(i.key)
+					switch (i.key)
 					{
 					case GLFW_KEY_W:
 						System.out.println("W Key Event " + timeClock.getElapse());

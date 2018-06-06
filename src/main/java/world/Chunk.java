@@ -28,7 +28,8 @@ public class Chunk
 	
 	public Chunk()
 	{
-		fillBlankTiles();
+		m_Tiles = new Tile[TileCount];
+		fillEmptyTiles();
 		m_Entities = new ArrayList<Entity>();
 	}
 	
@@ -40,9 +41,10 @@ public class Chunk
 	/*
 	 * Fill the entire chunk with empty tiles.
 	 */
-	public void fillBlankTiles()
+	public void fillEmptyTiles()
 	{
-		m_Tiles = new EmptyTile[TileCount];
+		for (int i = 0; i < m_Tiles.length; i++)
+			m_Tiles[i] = new EmptyTile();
 	}
 	
 	/*
