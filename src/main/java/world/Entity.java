@@ -9,6 +9,7 @@ public class Entity {
 	private boolean dead = false;
 	private int moveCount = 0;
 	private Player target;
+	public int ID;
 	
 	public void setPosition(int[] p_position) {m_position = p_position; }
 	public int[] getPosition() { return m_position; };

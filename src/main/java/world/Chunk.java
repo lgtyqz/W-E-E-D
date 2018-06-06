@@ -32,6 +32,9 @@ public class Chunk
 		fillEmptyTiles();
 		m_Entities = new ArrayList<Entity>();
 	}
+	public ArrayList<Entity> getEntities(){
+		return m_Entities;
+	}
 	public void spawnEntity(Entity e, int x, int y) {
 		int[] newPosition = {
 			m_Offset[0] + x,
@@ -183,6 +186,7 @@ public class Chunk
 		case Chaser.ID:		return new Chaser();	//-1
 		case Digger.ID:		return new Digger();	//-2
 		case Shovel.ID:		return new Shovel();	//540231, which is shovel in 1337speak
+		case Player.ID:		return new Player();	//2147483647, or Integer.MAX_VALUE
 		default:           return null;
 		}
 	}

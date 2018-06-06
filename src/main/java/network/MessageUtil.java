@@ -62,6 +62,14 @@ class MessageUtil
 		for (int x = 0; x < Chunk.RowTileCount; x++)
 			for (int y = 0; y < Chunk.RowTileCount; y++)
 				chunk.setTile(x, y, p_Scanner.nextInt());
+		
+		int numEntities = p_Scanner.nextInt();
+		for (int e = 0; e < numEntities * 3; e += 3) {
+			int x = p_Scanner.nextInt();
+			int y = p_Scanner.nextInt();
+			int ID = p_Scanner.nextInt();
+			chunk.setTile(x, y, ID);
+		}
 		return chunk;
 	}
 	
@@ -74,5 +82,12 @@ class MessageUtil
 		for (int x = 0; x < Chunk.RowTileCount; x++)
 			for (int y = 0; y < Chunk.RowTileCount; y++)
 				p_Writer.println(p_Chunk.getTile(x, y).getId());
+		
+		p_Writer.println(p_Chunk.getEntities().size());
+		for(int e = 0; e < p_Chunk.getEntities().size(); e++) {
+			p_Writer.println(p_Chunk.getEntities().get(e).getPosition()[0]);
+			p_Writer.println(p_Chunk.getEntities().get(e).getPosition()[1]);
+			p_Writer.println(p_Chunk.getEntities().get(e).ID);
+		}
 	}
 }

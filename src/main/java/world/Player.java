@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import graphics.Renderer;
 public class Player extends Entity {
+	public static final int ID = Integer.MAX_VALUE;
 	/*
 	 * Directions of player.
 	 */
@@ -23,6 +24,10 @@ public class Player extends Entity {
 	
 	private int facing;
 	Map<String, Integer> items = new HashMap<String, Integer>();
+	
+	public Player() {
+		facing = facingRight;
+	}
 	
 	public Player(int x, int y) {
 		int[] newPos = {x, y};
