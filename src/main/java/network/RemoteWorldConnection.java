@@ -60,7 +60,7 @@ public class RemoteWorldConnection implements Runnable
 					int[] pos = MessageUtil.readIntArr(m_Scanner, 2);
 					
 					m_Writer.print(MessageUtil.RECIEVED_CHUNK);
-					Chunk chunk = m_World.ensureChunkExistance(pos[0], pos[1]);
+					Chunk chunk = m_World.ensureChunkExistence(pos[0], pos[1]);
 					MessageUtil.printChunk(m_Writer, chunk);
 					break;
 				}
@@ -74,7 +74,7 @@ public class RemoteWorldConnection implements Runnable
 				{
 					int[] pos = MessageUtil.readIntArr(m_Scanner, 2);
 					int typeId = m_Scanner.nextInt();
-					if (m_World.ensureChunkExistance(pos[0], pos[1]) != null)
+					if (m_World.ensureChunkExistence(pos[0], pos[1]) != null)
 						m_World.setTile(pos[0], pos[1], typeId);
 					break;
 				}

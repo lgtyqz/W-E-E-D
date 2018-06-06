@@ -60,7 +60,7 @@ public class World
 		return prevChunk;
 	}
 	
-	public Chunk ensureChunkExistance(int p_X, int p_Y)
+	public Chunk ensureChunkExistence(int p_X, int p_Y)
 	{
 		Chunk chunk = getChunk(p_X, p_Y);
 		if (chunk == null)
