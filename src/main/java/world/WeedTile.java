@@ -15,7 +15,7 @@ public class WeedTile implements Tile {
 		//No walking through the weeds
 		return true;
 	}
-	public int tileId() { return ID; }
+	public int getId() { return ID; }
 	
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {

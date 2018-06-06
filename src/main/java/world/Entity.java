@@ -115,7 +115,7 @@ public class Entity {
 	}
 	public boolean dig(World p_World, int p_dX, int p_dY) {
 		if(p_World.getTile(getPosition()[0] + p_dX,
-							getPosition()[1] + p_dY).tileId() == 1){
+							getPosition()[1] + p_dY).getId() == 1){
 			//Is it a weed?
 			p_World.setTile(getPosition()[0] + p_dX,
 					getPosition()[1] + p_dY, new EmptyTile());

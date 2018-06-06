@@ -14,7 +14,7 @@ public class Stone implements Tile {
 	}
 
 	@Override
-	public int tileId() {
+	public int getId() {
 		return ID;
 	}
 

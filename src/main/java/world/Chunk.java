@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.joml.Matrix4f;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import graphics.Renderer;
 /*
@@ -55,6 +56,14 @@ public class Chunk
 		m_Tiles[p_X + p_Y * RowTileCount] = p_NewTile;
 		return oldTile;
 	}
+	
+	/*
+	 * Set a tile by id.
+	 */
+	public Tile setTile(int p_X, int p_Y, int p_NewTileID)
+	{
+		return setTile(p_X, p_Y, createTileFromId(p_NewTileID));
+	}
 
 	/*
 	 * Get a tile at local position.
@@ -77,22 +86,15 @@ public class Chunk
 		return Arrays.copyOf(m_Offset, m_Offset.length);
 	}
 	
-	public Tile IDtoTile(int id) {
-		Tile mail;
-		switch(id) {
-		case 0:
-			mail =  new EmptyTile();
-		break;
-		case 1:
-			mail =  new WeedTile();
-		break;
-		case 999:
-			mail = new Stone();
-		break;
-		default:
-			mail = new EmptyTile();
+	private Tile createTileFromId(int p_Id)
+	{
+		switch(p_Id)
+		{
+		case EmptyTile.ID: return new EmptyTile();
+		case WeedTile.ID:  return new WeedTile();
+		case Stone.ID:     return new Stone();
+		default:           return null;
 		}
-		return mail;
 	}
 	
 	public void draw(Renderer r, int[] cameraOffset) {

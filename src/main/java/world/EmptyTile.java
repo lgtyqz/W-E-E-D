@@ -16,7 +16,7 @@ public class EmptyTile implements Tile
 		return false;
 	}
 	@Override
-	public int tileId() { return ID; };
+	public int getId() { return ID; };
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {}
 }
