@@ -1,7 +1,7 @@
 package world;
 
 import java.util.Arrays;
-
+import java.util.Random;
 import org.joml.Matrix4f;
 
 import java.io.Serializable;
@@ -32,10 +32,80 @@ public class Chunk
 		fillEmptyTiles();
 		m_Entities = new ArrayList<Entity>();
 	}
+	public void spawnEntity(Entity e, int x, int y) {
+		int[] newPosition = {
+			m_Offset[0] + x,
+			m_Offset[1] + y
+		};
+		if(!e.equals(null)) {
+			e.setPosition(newPosition);
+			m_Entities.add(e);
+		}
+	}
 	
-	public void serverInitialization(Player focus) {
+	public void serverInitialization(Player focus, int seed) {
+		Random r = new Random();
+		r.setSeed(seed);
 		//Step 1: Load chunk position from focus coords
-		m_Offset = focus.getPosition();
+		m_Offset[0] = focus.getPosition()[0] - RowTileCount/2;
+		m_Offset[1] = focus.getPosition()[1] - RowTileCount/2; //TODO: translation
+		for(int i = 0; i < RowTileCount; i++) {
+			for(int j = 0; j < RowTileCount; j++) {
+				double result = Math.min(Math.floor(
+						ImprovedNoise.noise(m_Offset[0] + j,
+											m_Offset[1] + i, seed)), 255);
+				if(result <= 140 && result > 100) {
+					//Lower-level enemy spawn area
+					if(result % 10 == 0) {
+						//Destroyable Obstacle
+						setTile(j, i, new WeedTile());
+					}else {
+						//Spawn enemy
+						double rand = r.nextDouble();
+						Entity crip = null;
+						if(rand < 0.015) {
+							crip = new Chaser();
+						}else if(rand < 0.02) {
+							crip = new Digger();
+						}
+						spawnEntity(crip, j, i);
+					}
+				}else if(result > 70) {
+					//Slightly more dangerous area
+					if(result % 6 == 0) {
+						setTile(j, i, new WeedTile());
+						if(result % 4 == 0) {
+							setTile(j, i, new Stone());
+						}
+					}else {
+						//Spawn enemy or shovel
+						double rand = r.nextDouble();
+						Entity crip = null;
+						if(rand < 0.01) {
+							crip = new Chaser();
+						}else if(rand < 0.02) {
+							crip = new Digger();
+						}else if(rand < 0.035) {
+							crip = new Shovel();
+						}
+						spawnEntity(crip, j, i);
+					}
+				}else {
+					//Rewards zone
+					double rand = r.nextDouble();
+					Entity crip = null;
+					if(rand < 0.05) {
+						crip = new Shovel();
+					}else if(rand < 0.06) {
+						crip = new Bomb();
+					}else if(rand < 0.063) {
+						//TODO: Replace with harder enemy
+						crip = new Chaser();
+					}
+					spawnEntity(crip, j, i);
+				}
+			}
+		}
 	}
 	
 	/*

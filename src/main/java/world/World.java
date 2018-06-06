@@ -11,11 +11,13 @@ public class World
 	private int[] cameraOffset = {0, 0};
 	private Player focus;
 	private RemoteWorldConnection m_Remote;
+	private int seed;
 	
 	/*
 	 * TODO: Returns tile in world position.
 	 */
-	public World() {
+	public World(String seedStr) {
+		seed = seedStr.hashCode();
 		m_Chunks = new ArrayList<Chunk>();
 		m_Entities = new ArrayList<Entity>();
 	}
@@ -31,7 +33,9 @@ public class World
 	}
 	
 	public void testInitialization() {
-		
+		Chunk c = new Chunk();
+		c.serverInitialization(focus, seed);
+		m_Chunks.add(c);
 	}
 	
 	public int[] getChunkOffsetFromTilePosition(int p_X, int p_Y) // mMMMmmm big names
@@ -73,6 +77,7 @@ public class World
 				chunk = new Chunk();
 				int[] offset = getChunkOffsetFromTilePosition(p_X, p_Y);
 				chunk.setOffset(offset[0], offset[1]);
+				chunk.serverInitialization(focus, seed);
 				m_Chunks.add(chunk);
 			}
 		}
