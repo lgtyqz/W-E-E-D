@@ -3,6 +3,7 @@ import org.joml.Matrix4f;
 
 import graphics.Renderer;
 public class Chaser extends Entity {
+	public static final int ID = -1;
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {
 		//draw red rounded rect

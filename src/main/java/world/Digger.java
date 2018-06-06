@@ -3,6 +3,7 @@ import org.joml.Matrix4f;
 
 import graphics.Renderer;
 public class Digger extends Entity {
+	public static final int ID = -2;
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {
 		//draw GREEN rounded rect

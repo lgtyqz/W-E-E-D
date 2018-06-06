@@ -123,13 +123,25 @@ public class Chunk
 	/*
 	 * Replace a tile at local position.
 	 */
-	public Tile setTile(int p_X, int p_Y, Tile p_NewTile)
+	public Tile setTile(int p_X, int p_Y, Object p_NewTile)
 	{
 		if (p_NewTile == null)
 			throw new IllegalArgumentException("Null tile");
-		Tile oldTile = getTile(p_X, p_Y);
-		m_Tiles[p_X + p_Y * RowTileCount] = p_NewTile;
-		return oldTile;
+		if(p_NewTile instanceof Tile) {
+			Tile oldTile = getTile(p_X, p_Y);
+			m_Tiles[p_X + p_Y * RowTileCount] = (Tile)p_NewTile;
+			return oldTile;
+		}else if(p_NewTile instanceof Entity) {
+			Entity newEntity = (Entity)p_NewTile;
+			int[] newPos = {
+				m_Offset[0] + p_X,
+				m_Offset[1] + p_Y
+			};
+			newEntity.setPosition(newPos);
+			return getTile(p_X, p_Y);
+		}else {
+			throw new IllegalArgumentException("Neither tile nor entity");
+		}
 	}
 	
 	/*
@@ -161,13 +173,16 @@ public class Chunk
 		return Arrays.copyOf(m_Offset, m_Offset.length);
 	}
 	
-	private Tile createTileFromId(int p_Id)
+	private Object createTileFromId(int p_Id)
 	{
 		switch(p_Id)
 		{
-		case EmptyTile.ID: return new EmptyTile();
-		case WeedTile.ID:  return new WeedTile();
-		case Stone.ID:     return new Stone();
+		case EmptyTile.ID: 	return new EmptyTile();	//0
+		case WeedTile.ID: 	return new WeedTile();	//1
+		case Stone.ID:     	return new Stone();		//999
+		case Chaser.ID:		return new Chaser();	//-1
+		case Digger.ID:		return new Digger();	//-2
+		case Shovel.ID:		return new Shovel();	//540231, which is shovel in 1337speak
 		default:           return null;
 		}
 	}

@@ -2,6 +2,7 @@ package world;
 import graphics.Renderer;
 
 public class Shovel extends Entity {
+	public static final int ID = 540231;
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {
 		//TODO: draw shovel texture
