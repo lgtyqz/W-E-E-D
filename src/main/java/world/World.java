@@ -11,14 +11,18 @@ public class World
 	private int[] cameraOffset = {0, 0};
 	private Player focus;
 	private RemoteWorldConnection m_Remote;
-	private int seed;
+	private int m_Seed;
 	
-	public World(String seedStr)
+	public World()
 	{
-		seed = seedStr.hashCode();
 		m_Remote = null;
 		m_Chunks = new ArrayList<Chunk>();
 		m_Entities = new ArrayList<Entity>();
+	}
+	
+	public void setSeed(String p_SeedStr)
+	{
+		m_Seed = p_SeedStr.hashCode();
 	}
 	
 	public void setFocus(Player p_Focus)
@@ -29,12 +33,6 @@ public class World
 	public void setRemote(RemoteWorldConnection p_Remote)
 	{
 		m_Remote = p_Remote;
-	}
-	
-	public void testInitialization() {
-		Chunk c = new Chunk();
-		c.serverInitialization(focus, seed);
-		m_Chunks.add(c);
 	}
 	
 	public int[] getChunkOffsetFromTilePosition(int p_X, int p_Y) // mMMMmmm big names
@@ -68,15 +66,15 @@ public class World
 		Chunk chunk = getChunk(p_X, p_Y);
 		if (chunk == null)
 		{
+			// Send a request to the server for a new chunk
 			if (m_Remote != null)
 				m_Remote.makeChunkRequest(p_X, p_Y);
 			else
 			{
-				// TODO: Add world generation here.
 				chunk = new Chunk();
 				int[] offset = getChunkOffsetFromTilePosition(p_X, p_Y);
 				chunk.setOffset(offset[0], offset[1]);
-				chunk.serverInitialization(focus, seed);
+				chunk.generate(m_Seed);
 				m_Chunks.add(chunk);
 			}
 		}
@@ -85,6 +83,9 @@ public class World
 	
 	public Tile getTile(int p_X, int p_Y)
 	{
+		Chunk chunk = ensureChunkExistence(p_X, p_Y);
+		if (chunk != null)
+			return chunk.getTile(p_X - chunk.getOffset()[0], p_Y - chunk.getOffset()[1]);
 		return null;
 	}
 	public Tile setTile(int p_X, int p_Y, Tile p_Tile)

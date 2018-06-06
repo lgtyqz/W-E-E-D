@@ -32,22 +32,27 @@ public class Player extends Entity {
 	public void processKeyEvents(int key, World p_World) {
 		switch(key) {
 		case GLFW_KEY_RIGHT:
+			System.out.println("Move Right");
 			displace(1, 0, p_World);
 			facing = 1;
 		break;
 		case GLFW_KEY_LEFT:
+			System.out.println("Move Left");
 			displace(-1, 0, p_World);
 			facing = 0;
 		break;
 		case GLFW_KEY_UP:
+			System.out.println("Move Up");
 			displace(0, -1, p_World);
 			facing = 2;
 		break;
 		case GLFW_KEY_DOWN:
+			System.out.println("Move Down");
 			displace(0, 1, p_World);
 			facing = 3;
 		break;
 		case GLFW_KEY_Z: //Kaboom seed effect
+			System.out.println("Kaboom Seed!");
 			switch(facing) {
 			case facingLeft:
 				effectSeedKaboom(p_World, -2, 0);
@@ -64,6 +69,7 @@ public class Player extends Entity {
 			}
 		break;
 		case GLFW_KEY_X:
+			System.out.println("Shovel");
 			switch(facing) {
 			case facingLeft:
 				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {

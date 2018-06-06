@@ -37,18 +37,18 @@ public class Chunk
 			m_Offset[0] + x,
 			m_Offset[1] + y
 		};
-		if(!e.equals(null)) {
+		if(e != null) {
 			e.setPosition(newPosition);
 			m_Entities.add(e);
 		}
 	}
 	
-	public void serverInitialization(Player focus, int seed) {
+	public void generate(int seed) {
 		Random r = new Random();
 		r.setSeed(seed);
 		//Step 1: Load chunk position from focus coords
-		m_Offset[0] = focus.getPosition()[0] - RowTileCount/2;
-		m_Offset[1] = focus.getPosition()[1] - RowTileCount/2; //TODO: translation
+		//m_Offset[0] = focus.getPosition()[0] - RowTileCount/2;
+		//m_Offset[1] = focus.getPosition()[1] - RowTileCount/2; //TODO: translation
 		for(int i = 0; i < RowTileCount; i++) {
 			for(int j = 0; j < RowTileCount; j++) {
 				double result = Math.min(Math.floor(
@@ -106,6 +106,7 @@ public class Chunk
 				}
 			}
 		}
+		return;
 	}
 	
 	/*

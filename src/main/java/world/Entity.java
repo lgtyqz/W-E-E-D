@@ -10,10 +10,10 @@ public class Entity {
 	private int moveCount = 0;
 	private Player target;
 	
-	public void setPosition(int[] p_position) {m_position = p_position; };
+	public void setPosition(int[] p_position) {m_position = p_position; }
 	public int[] getPosition() { return m_position; };
 	public float getTimer() { return moveTimer; }
-	public void setTimer(long p_moveTimer) { moveTimer = p_moveTimer; };
+	public void setTimer(long p_moveTimer) { moveTimer = p_moveTimer; }
 	public boolean isAlive() { return dead; }
 	public void kill() { dead = true; }
 	public int getMoveCount() { return moveCount; }
@@ -22,8 +22,8 @@ public class Entity {
 	public Player getTarget() { return target; }
 	
 	public void displace(int x, int y, World p_World) {
-		if(!p_World.getTile(m_position[0] + x, m_position[1] + y).isObstacle()
-				&& moveTimer == refractoryPeriod)
+		Tile tile = p_World.getTile(m_position[0] + x, m_position[1] + y);
+		if(tile != null && !tile.isObstacle() && moveTimer == refractoryPeriod)
 		{
 			//Spawn weed
 			p_World.setTile(m_position[0], m_position[1], new WeedTile());
@@ -59,7 +59,7 @@ public class Entity {
 	public void hunt8Way(double minDist, World p_World) {
 		//minDist is minimum seeing distance
 		//Make sure it's targeting SOMETHING and that it's good to move
-		if(!target.equals(null) && moveTimer == refractoryPeriod) {
+		if(target != null && moveTimer == refractoryPeriod) {
 			// Relative coords of closest tile to player
 			int[] minSquares = {-1, -1};
 			minDist = 20; //Minimum sight range
@@ -86,7 +86,7 @@ public class Entity {
 	public void huntOrtho(double minDist, World p_World) {
 		//minDist is minimum seeing distance
 		//Make sure it's targeting SOMETHING and that it's good to move
-		if(!target.equals(null) && moveTimer == refractoryPeriod) {
+		if(target != null && moveTimer == refractoryPeriod) {
 			// Relative coords of closest tile to player
 			int[] minSquares = {-1, -1};
 			minDist = 20; //Minimum sight range

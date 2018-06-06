@@ -18,5 +18,9 @@ public class EmptyTile implements Tile
 	@Override
 	public int getId() { return ID; };
 	@Override
-	public void draw(Renderer r, int[] cameraOffset) {}
+	public void draw(Renderer r, int[] cameraOffset)
+	{
+		r.setColor(0.6f, 0.6f, 0.6f, 1f);
+		r.drawRoundedRectangle(3, 25, 25);
+	}
 }

@@ -47,13 +47,14 @@ public class Client implements Application
 		
 		braveNewWorld.setFocus(mustafa);
 		braveNewWorld.ensureChunkExistence(0, 0);
-		braveNewWorld.ensureChunkExistence(Chunk.RowTileCount + 1, 0);
+		//braveNewWorld.ensureChunkExistence(Chunk.RowTileCount + 1, 0);
 		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
 		
 		Clock timeClock = new Clock();
 		Clock deltaClock = new Clock();
+		Clock moveClock = new Clock();
 		while (!window.closing())
 		{
 			final float delta = deltaClock.restart();
@@ -61,14 +62,11 @@ public class Client implements Application
 			// Handle events here
 			for (WindowEvent i : window.updateEvents())
 			{
-				if (i.key >= 0)
+				if (i.key >= 0 && timeClock.getElapse() > 0.3)
 				{
-					switch (i.key)
-					{
-					case GLFW_KEY_W:
-						System.out.println("W Key Event " + timeClock.getElapse());
-						break;
-					}
+					mustafa.processKeyEvents(i.key, braveNewWorld);
+					braveNewWorld.ensureChunkExistence(mustafa.getPosition()[0], mustafa.getPosition()[1]);
+					timeClock.restart();
 				}
 			}
 			
