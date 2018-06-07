@@ -224,7 +224,7 @@ public class Renderer
 		// Update the view. Use window size.
 		// Makes everything work from top-left and in pixel coordinates
 		Matrix4f view = new Matrix4f();
-		view.ortho2D(0f, m_Window.getHeight(), m_Window.getWidth(), 0f);
+		view.ortho2D(0f, m_Window.getWidth(), m_Window.getHeight(), 0f);
 		
 		// Update the shader's parameters
 		currentShader.setUniform("viewMatrix", view);
