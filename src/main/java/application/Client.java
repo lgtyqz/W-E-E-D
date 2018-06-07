@@ -32,7 +32,7 @@ public class Client implements Application
 		Window window = new Window();
 		window.init(800, 600, "Pie in the horse");
 		
-		Player mustafa = new Player(8, 8);
+		Player mustafa = new Player(14, 10);
 		World braveNewWorld = new World();
 		
 		Socket socket = null;
@@ -43,6 +43,8 @@ public class Client implements Application
 		}
 		RemoteWorldConnection remote = new RemoteWorldConnection(braveNewWorld, socket);
 		remote.start("Client Remote Thread");
+		//remote.sendSyncClockRequest();
+		
 		braveNewWorld.setRemote(remote);
 		
 		braveNewWorld.setFocus(mustafa);
@@ -52,22 +54,29 @@ public class Client implements Application
 		renderer.setWindow(window);
 		
 		Clock timeClock = new Clock();
-		Clock deltaClock = new Clock();
 		Clock moveClock = new Clock();
+		Clock chunkRefreshClock = new Clock();
 		while (!window.closing())
 		{
-			final float delta = deltaClock.restart();
+			// Let's clear the chunks periodically for performance reasons
+			if (chunkRefreshClock.getElapse() >= 5)
+			{
+				System.out.println("Clearing useless chunks");
+				braveNewWorld.clearChunks(mustafa.getPosition(), Chunk.RowTileCount*2);
+				chunkRefreshClock.restart();
+			}
 			
 			// Handle events here
 			for (WindowEvent i : window.updateEvents())
 			{
-				if (i.key >= 0 && timeClock.getElapse() > 0.3)
+				if (i.key >= 0 && timeClock.getElapse() > 0.1)
 				{
 					mustafa.processKeyEvents(i.key, braveNewWorld);
-					braveNewWorld.ensureChunkExistence(mustafa.getPosition()[0], mustafa.getPosition()[1]);
+					updateChunks(braveNewWorld, mustafa);
 					timeClock.restart();
 				}
 			}
+			
 			
 			window.clear();
 			
@@ -80,5 +89,22 @@ public class Client implements Application
 		
 		// Terminate the remote thread
 		remote.getThread().interrupt();
+	}
+	
+	/*
+	 * Updates the chunks around the player
+	 */
+	private static void updateChunks(World p_World, Player p_Player)
+	{
+		p_World.ensureChunkExistence(p_Player.getPosition()[0], p_Player.getPosition()[1]);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0], p_Player.getPosition()[1]);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0] + Chunk.RowTileCount, p_Player.getPosition()[1]);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0] - Chunk.RowTileCount, p_Player.getPosition()[1]);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0], p_Player.getPosition()[1] + Chunk.RowTileCount);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0], p_Player.getPosition()[1] - Chunk.RowTileCount);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0] + Chunk.RowTileCount, p_Player.getPosition()[1] + Chunk.RowTileCount);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0] - Chunk.RowTileCount, p_Player.getPosition()[1] - Chunk.RowTileCount);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0] + Chunk.RowTileCount, p_Player.getPosition()[1] - Chunk.RowTileCount);
+		p_World.ensureChunkExistence(p_Player.getPosition()[0] - Chunk.RowTileCount, p_Player.getPosition()[1] + Chunk.RowTileCount);
 	}
 }

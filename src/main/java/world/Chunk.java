@@ -176,7 +176,7 @@ public class Chunk
 		return Arrays.copyOf(m_Offset, m_Offset.length);
 	}
 	
-	private Object createTileFromId(int p_Id)
+	public static Object createTileFromId(int p_Id)
 	{
 		switch(p_Id)
 		{

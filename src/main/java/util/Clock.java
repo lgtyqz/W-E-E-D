@@ -41,6 +41,11 @@ public class Clock
 		m_StartTime = p_Time;
 	}
 	
+	public double getStartTime()
+	{
+		return m_StartTime;
+	}
+	
 	/*
 	 * Restart clock.
 	 * Returns the previous elapse in seconds.

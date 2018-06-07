@@ -111,6 +111,11 @@ public class Renderer
 		m_Window = p_Window;
 	}
 	
+	public Window getWindow()
+	{
+		return m_Window;
+	}
+	
 	/*
 	 * Set the transform matrix for the next draw.
 	 * Note: This is reset after every draw.

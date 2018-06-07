@@ -34,7 +34,7 @@ class MessageUtil
 	 */
 	public static final int SYNC_CLOCK = 3;
 	
-	public static final int REQUEST_SYNC_CLOCK = 3;
+	public static final int REQUEST_SYNC_CLOCK = 4;
 	
 	public static int[] readIntArr(Scanner p_Scanner, int p_Size)
 	{
@@ -69,7 +69,7 @@ class MessageUtil
 			int y = p_Scanner.nextInt();
 			int ID = p_Scanner.nextInt();
 			
-			//chunk.setTile(x, y, ID);
+			chunk.spawnEntity((Entity)Chunk.createTileFromId(ID), x, y);
 		}
 		return chunk;
 	}

@@ -5,6 +5,7 @@ import java.util.concurrent.Semaphore;
 
 import graphics.Renderer;
 import network.RemoteWorldConnection;
+import util.Util;
 
 public class World
 {
@@ -32,6 +33,10 @@ public class World
 		focus = p_Focus;
 	}
 	
+	/*
+	 * This makes this world rely on a server for chunk data and
+	 * entity updates.
+	 */
 	public void setRemote(RemoteWorldConnection p_Remote)
 	{
 		m_Remote = p_Remote;
@@ -44,7 +49,7 @@ public class World
 		return new int[] { x, y };
 	}
 	
-	public Chunk getChunk(int p_X, int p_Y)
+	public synchronized Chunk getChunk(int p_X, int p_Y)
 	{
 		int[] offset = getChunkOffsetFromTilePosition(p_X, p_Y);
 		for (Chunk i : m_Chunks)
@@ -63,14 +68,14 @@ public class World
 		return prevChunk;
 	}
 	
-	public Chunk ensureChunkExistence(int p_X, int p_Y)
+	public synchronized Chunk ensureChunkExistence(int p_X, int p_Y)
 	{
 		Chunk chunk = getChunk(p_X, p_Y);
 		if (chunk == null)
 		{
 			// Send a request to the server for a new chunk
 			if (m_Remote != null)
-				m_Remote.makeChunkRequest(p_X, p_Y);
+				m_Remote.sendChunkRequest(p_X, p_Y);
 			else
 			{
 				chunk = new Chunk();
@@ -91,22 +96,46 @@ public class World
 			return chunk.getTile(p_X - chunk.getOffset()[0], p_Y - chunk.getOffset()[1]);
 		return null;
 	}
+	
 	public Tile setTile(int p_X, int p_Y, Tile p_Tile)
 	{
+		Chunk chunk = ensureChunkExistence(p_X, p_Y);
+		if (m_Remote != null)
+			m_Remote.sendChangedTile(p_X, p_Y, p_Tile);
+		if (chunk != null)
+			return chunk.setTile(p_X - chunk.getOffset()[0],
+					p_Y - chunk.getOffset()[1], p_Tile);
 		return null;
 	}
+	
 	public Tile setTile(int p_X, int p_Y, int p_TileId)
 	{
-		return null;
+		return setTile(p_X, p_Y, (Tile)Chunk.createTileFromId(p_TileId));
 	}
+	
 	public synchronized void draw(Renderer r, int width, int height) {
-		cameraOffset[0] = focus.getPosition()[0] - Chunk.RowTileCount/2;
-		cameraOffset[1] = focus.getPosition()[1] - Chunk.RowTileCount/2;
+		cameraOffset[0] = focus.getPosition()[0] - (r.getWindow().getWidth()/25)/2;
+		cameraOffset[1] = focus.getPosition()[1] - (r.getWindow().getHeight()/25)/2;
 		for(Chunk i : m_Chunks) { i.draw(r, cameraOffset); }
 		
 		if (focus != null)
 			focus.draw(r, cameraOffset);
 		//TODO: adjust camera position
 		for(Entity i : m_Entities) { i.draw(r, cameraOffset); }
+	}
+	
+	public void clearChunks()
+	{
+		m_Chunks.clear();
+	}
+	
+	/*
+	 * Clear all chunks that are outside the specified circle
+	 */
+	public void clearChunks(int[] p_Center, int p_Radius)
+	{
+		for (int i = 0; i < m_Chunks.size(); i++)
+			if (Util.distance(m_Chunks.get(i).getOffset(), p_Center) > p_Radius)
+				m_Chunks.remove(i--);
 	}
 }

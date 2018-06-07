@@ -41,7 +41,7 @@ public class RemoteWorldConnection implements Runnable
 		}
 	}
 	
-	public void makeChunkRequest(int p_X, int p_Y)
+	public void sendChunkRequest(int p_X, int p_Y)
 	{
 		m_Writer.println(MessageUtil.REQUEST_CHUNK);
 		m_Writer.println(p_X);
@@ -57,21 +57,30 @@ public class RemoteWorldConnection implements Runnable
 		m_Writer.println(p_Tile.getId());
 	}
 	
+	public void sendChunkUpdate(int p_X, int p_Y)
+	{
+		m_Writer.println(MessageUtil.RECIEVED_CHUNK);
+		Chunk chunk = m_World.ensureChunkExistence(p_X, p_Y);
+		MessageUtil.printChunk(m_Writer, chunk);
+	}
+	
+	public void sendSyncClockRequest()
+	{
+		m_Writer.println(MessageUtil.REQUEST_SYNC_CLOCK);
+	}
+	
 	@Override
 	public void run()
 	{
 		try {
 			while(true)
 			{
-				// Wait until an int is available.
+				// Wait until a value is available.
 				// This will also terminate the thread if
 				// the interrupt flag is set.
 				try {
 					while(!m_BufReader.ready())
-					{
-						System.out.println("Check");
-						Thread.sleep(1000);
-					}
+						Thread.sleep(20);
 				}catch(Exception e)
 				{
 					e.printStackTrace();
@@ -85,37 +94,33 @@ public class RemoteWorldConnection implements Runnable
 				{
 				case MessageUtil.REQUEST_CHUNK:
 				{
-					//lock.lock();
 					int[] pos = MessageUtil.readIntArr(m_Scanner, 2);
-					
-					m_Writer.println(MessageUtil.RECIEVED_CHUNK);
-					Chunk chunk = m_World.ensureChunkExistence(pos[0], pos[1]);
-					//chunk.generate(seed);
-					MessageUtil.printChunk(m_Writer, chunk);
-					//lock.unlock();
+					sendChunkUpdate(pos[0], pos[1]);
 					break;
 				}
 				case MessageUtil.RECIEVED_CHUNK:
 				{
-					///lock.lock();
 					Chunk chunk = MessageUtil.readChunk(m_Scanner);
 					m_World.setChunk(chunk);
-					//lock.unlock();
 					break;
 				}
 				case MessageUtil.TILE_CHANGED:
 				{
-					//lock.lock();
 					int[] pos = MessageUtil.readIntArr(m_Scanner, 2);
 					int typeId = m_Scanner.nextInt();
 					if (m_World.ensureChunkExistence(pos[0], pos[1]) != null)
 						m_World.setTile(pos[0], pos[1], typeId);
-					//lock.unlock();
 					break;
 				}
 				case MessageUtil.SYNC_CLOCK:
 				{
 					m_SyncClock.setStartTime(m_Scanner.nextDouble());
+					break;
+				}
+				case MessageUtil.REQUEST_SYNC_CLOCK:
+				{
+					m_Writer.println(MessageUtil.SYNC_CLOCK);
+					m_Writer.println(m_SyncClock.getStartTime());
 					break;
 				}
 				}
@@ -137,7 +142,7 @@ public class RemoteWorldConnection implements Runnable
 		return m_Thread;
 	}
 	
-	public Clock getSyncClock()
+	public Clock getClock()
 	{
 		return new Clock(m_SyncClock);
 	}

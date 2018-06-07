@@ -1,5 +1,6 @@
 package world;
 import graphics.Renderer;
+import util.Util;
 
 public class Entity {
 	private int[] m_position = {0, 0};
@@ -53,12 +54,7 @@ public class Entity {
 	public void update(World p_World) {
 		
 	}
-	public double distance(int[] pos1, int[] pos2) {
-		return Math.sqrt(
-				Math.pow(pos1[0] - pos2[0], 2) + 
-				Math.pow(pos1[1] - pos2[1], 2)
-			);
-	}
+
 	public void hunt8Way(double minDist, World p_World) {
 		//minDist is minimum seeing distance
 		//Make sure it's targeting SOMETHING and that it's good to move
@@ -71,9 +67,9 @@ public class Entity {
 				for(int j = -1; j <= 1; j++) {
 					int[] newPosition = {getPosition()[0] + j,
 										getPosition()[1] + i};
-					if(distance(target.getPosition(), newPosition) 
+					if(Util.distance(target.getPosition(), newPosition) 
 							< minDist) {
-						minDist = distance(target.getPosition(), newPosition);
+						minDist = Util.distance(target.getPosition(), newPosition);
 						minSquares[0] = j;
 						minSquares[1] = i;
 					}
@@ -99,9 +95,9 @@ public class Entity {
 					if(i == 0 || j == 0) {
 						int[] newPosition = {getPosition()[0] + j,
 											getPosition()[1] + i};
-						if(distance(target.getPosition(), newPosition) 
+						if(Util.distance(target.getPosition(), newPosition) 
 								< minDist) {
-							minDist = distance(target.getPosition(),
+							minDist = Util.distance(target.getPosition(),
 									newPosition);
 							minSquares[0] = j;
 							minSquares[1] = i;
