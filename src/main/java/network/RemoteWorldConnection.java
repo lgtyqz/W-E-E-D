@@ -17,9 +17,9 @@ public class RemoteWorldConnection implements Runnable
 {
 	private World m_World;
 	private Socket m_Socket;
+	private BufferedReader m_BufReader;
 	private Scanner m_Scanner;
 	private PrintWriter m_Writer;
-	private int m_RunAs;
 	private Thread m_Thread;
 	private Clock m_SyncClock;
 	
@@ -31,7 +31,10 @@ public class RemoteWorldConnection implements Runnable
 		m_World = p_World;
 		m_Socket = p_Socket;
 		try {
-			m_Scanner = new Scanner(p_Socket.getInputStream());
+			// The bufferreader will handle the input and allow us to check if there is any daya to read from the stream.
+			// The scanner's next### and hasNext### methods block the thread and doesn't allow us to terminate it.
+			m_BufReader = new BufferedReader(new InputStreamReader(p_Socket.getInputStream()));
+			m_Scanner = new Scanner(m_BufReader);
 			m_Writer = new PrintWriter(p_Socket.getOutputStream(), true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,6 +63,22 @@ public class RemoteWorldConnection implements Runnable
 		try {
 			while(true)
 			{
+				// Wait until an int is available.
+				// This will also terminate the thread if
+				// the interrupt flag is set.
+				try {
+					while(!m_BufReader.ready())
+					{
+						System.out.println("Check");
+						Thread.sleep(1000);
+					}
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+					return;
+				}
+				
+				// Interpret the message
 				int message = m_Scanner.nextInt();
 				System.out.println("Recieved message: " + message);
 				switch(message)

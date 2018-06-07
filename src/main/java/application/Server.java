@@ -17,6 +17,7 @@ public class Server implements Application
 	private ServerSocket m_ServerSocket;
 	private ArrayList<RemoteWorldConnection> m_ClientThreads;
 	private World m_World;
+	private Thread m_ClientAcceptingThread;
 	
 	class ClientAcceptingThread implements Runnable
 	{
@@ -40,8 +41,8 @@ public class Server implements Application
 					RemoteWorldConnection remote = new RemoteWorldConnection(m_Server.m_World, socket);
 					remote.start(Integer.toString(m_ClientThreads.size()));
 					m_ClientThreads.add(remote);
-				}
-			} catch (Exception e) {
+				}	
+			}catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -53,11 +54,26 @@ public class Server implements Application
 		m_World = new World();
 		m_World.setSeed("dcu7x");
 	}
+	
+	public void close()
+	{
+		// End all the world connections
+		for (RemoteWorldConnection i : m_ClientThreads)
+			i.getThread().interrupt();
+		
+		try {
+			// Causes ClientAcceptingThread to throw an exception and terminate.
+			m_ServerSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void run()
 	{
-		Thread serverThread = new Thread(new ClientAcceptingThread(this), "ClientAcceptingThread");
-		serverThread.start();
+		m_ClientAcceptingThread = new Thread(new ClientAcceptingThread(this), "ClientAcceptingThread");
+		m_ClientAcceptingThread.start();
 	}
 }

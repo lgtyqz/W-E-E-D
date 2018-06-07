@@ -64,11 +64,12 @@ class MessageUtil
 				chunk.setTile(x, y, p_Scanner.nextInt());
 		
 		int numEntities = p_Scanner.nextInt();
-		for (int e = 0; e < numEntities * 3; e += 3) {
+		for (int i = 0; i < numEntities; i++) {
 			int x = p_Scanner.nextInt();
 			int y = p_Scanner.nextInt();
 			int ID = p_Scanner.nextInt();
-			chunk.setTile(x, y, ID);
+			
+			//chunk.setTile(x, y, ID);
 		}
 		return chunk;
 	}

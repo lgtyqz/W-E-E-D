@@ -30,7 +30,7 @@ public class Client implements Application
 		glfwInit();
 		
 		Window window = new Window();
-		window.init(400, 400, "Pie in the horse");
+		window.init(800, 600, "Pie in the horse");
 		
 		Player mustafa = new Player(8, 8);
 		World braveNewWorld = new World();
@@ -47,7 +47,6 @@ public class Client implements Application
 		
 		braveNewWorld.setFocus(mustafa);
 		braveNewWorld.ensureChunkExistence(0, 0);
-		//braveNewWorld.ensureChunkExistence(Chunk.RowTileCount + 1, 0);
 		
 		Renderer renderer = new Renderer();
 		renderer.setWindow(window);
@@ -78,5 +77,8 @@ public class Client implements Application
 			
 			window.update();
 		}
+		
+		// Terminate the remote thread
+		remote.getThread().interrupt();
 	}
 }

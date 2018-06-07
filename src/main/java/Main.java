@@ -21,21 +21,6 @@ import graphics.*;
 import world.*;
 import util.Clock;
 
-class ServerThread implements Runnable
-{
-	@Override
-	public void run()
-	{
-		try {
-			Application app = new Server();
-			app.run();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-}
 
 public class Main
 {
@@ -43,11 +28,13 @@ public class Main
 	public static void main(String[] args)
 	{
 		// We'll just run the server and client in the same instance for now
-		Thread server = new Thread(new ServerThread(), "pie");
-		server.start();
+		Server server = new Server();
+		server.run();
+		
 		try {
 			Application app = new Client();
 			app.run();
+			server.close();
 		}
 		catch(Exception e)
 		{
