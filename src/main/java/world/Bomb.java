@@ -29,5 +29,5 @@ public class Bomb extends Entity {
 			}
 		}
 	}
-	public static int getID() { return ID; }
+	public int getID() { return ID; }
 }

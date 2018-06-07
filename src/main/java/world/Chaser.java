@@ -21,5 +21,5 @@ public class Chaser extends Entity {
 		}
 		hunt8Way(20.0, p_World);
 	}
-	public static int getID() { return ID; }
+	public int getID() { return ID; }
 }

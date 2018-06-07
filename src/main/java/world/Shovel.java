@@ -10,5 +10,5 @@ public class Shovel extends Entity {
 	@Override
 	// We don't want shovels to die
 	public void handleTimers(float change) {}
-	public static int getID() { return ID; }
+	public int getID() { return ID; }
 }

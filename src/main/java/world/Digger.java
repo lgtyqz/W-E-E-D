@@ -30,5 +30,5 @@ public class Digger extends Entity {
 			incrementMoves(); //to switch back to hunt mode
 		}
 	}
-	public static int getID() { return ID; }
+	public int getID() { return ID; }
 }

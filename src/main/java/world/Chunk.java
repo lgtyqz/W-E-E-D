@@ -187,7 +187,7 @@ public class Chunk
 		case Digger.ID:		return new Digger();	//-2
 		case Shovel.ID:		return new Shovel();	//540231, which is shovel in 1337speak
 		case Player.ID:		return new Player();	//2147483647, or Integer.MAX_VALUE
-		default:           return null;
+		default:            return null;
 		}
 	}
 	

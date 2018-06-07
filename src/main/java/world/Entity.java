@@ -132,5 +132,5 @@ public class Entity {
 		//something about going through all the players available and picking
 		//the closest one if they're in range
 	}
-	public static int getID() { return ID; }
+	public int getID() { return ID; }
 }

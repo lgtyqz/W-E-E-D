@@ -137,5 +137,5 @@ public class Player extends Entity {
 		//TODO: Loop through entities, if touching item, pick up that item
 		
 	}
-	public static int getID() { return ID; }
+	public int getID() { return ID; }
 }

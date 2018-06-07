@@ -1,6 +1,8 @@
 package world;
 
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
+
 import graphics.Renderer;
 import network.RemoteWorldConnection;
 
@@ -52,7 +54,7 @@ public class World
 		return null;
 	}
 	
-	public Chunk setChunk(Chunk p_Chunk)
+	public synchronized Chunk setChunk(Chunk p_Chunk)
 	{
 		Chunk prevChunk = getChunk(p_Chunk.getOffset()[0], p_Chunk.getOffset()[1]);
 		if (prevChunk != null)
@@ -82,7 +84,7 @@ public class World
 		return chunk;
 	}
 	
-	public Tile getTile(int p_X, int p_Y)
+	public synchronized Tile getTile(int p_X, int p_Y)
 	{
 		Chunk chunk = ensureChunkExistence(p_X, p_Y);
 		if (chunk != null)
@@ -97,7 +99,7 @@ public class World
 	{
 		return null;
 	}
-	public void draw(Renderer r, int width, int height) {
+	public synchronized void draw(Renderer r, int width, int height) {
 		cameraOffset[0] = focus.getPosition()[0] - Chunk.RowTileCount/2;
 		cameraOffset[1] = focus.getPosition()[1] - Chunk.RowTileCount/2;
 		for(Chunk i : m_Chunks) { i.draw(r, cameraOffset); }
