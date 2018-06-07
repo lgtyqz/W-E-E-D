@@ -5,7 +5,7 @@ import util.Util;
 public class Entity {
 	private int[] m_position = {0, 0};
 	private float timeLeft = 10f; //That's ten seconds in nanoseconds
-	private float refractoryPeriod = 0.4f;
+	private float refractoryPeriod = 0.25f;
 	private float moveTimer = 0;
 	private boolean dead = false;
 	private int moveCount = 0;
@@ -31,11 +31,9 @@ public class Entity {
 			p_World.setTile(m_position[0], m_position[1], new WeedTile());
 			m_position[0] += x;
 			m_position[1] += y;
-			timeLeft = (long)1e10; //Reset lifespan
+			timeLeft = 10f; //Reset lifespan
 			moveTimer = 0; //Commence delay
 		}
-		else
-			System.out.println(tile == null);
 	}
 	public void handleTimers(float change) {
 		if(moveTimer < refractoryPeriod) {
@@ -127,6 +125,21 @@ public class Entity {
 	public void setTarget(World p_World) {
 		//something about going through all the players available and picking
 		//the closest one if they're in range
+		int index = 0;
+		double minDist = Double.MAX_VALUE;
+		for(int i = 0; i < p_World.getEntities().size(); i++) {
+			Entity lookAtMe = p_World.getEntities().get(i);
+			if(lookAtMe instanceof Player &&
+					Util.distance(getPosition(), lookAtMe.getPosition()) < minDist) {
+				index = i;
+				minDist = Util.distance(getPosition(), lookAtMe.getPosition());
+			}
+		}
+		if(minDist != Double.MAX_VALUE) { //aka it found something other than the focus player
+			target = (Player)p_World.getEntities().get(index);
+		}else {
+			target = p_World.getFocus();
+		}
 	}
 	public int getID() { return ID; }
 }

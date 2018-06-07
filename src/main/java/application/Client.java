@@ -69,7 +69,7 @@ public class Client implements Application
 			// Handle events here
 			for (WindowEvent i : window.updateEvents())
 			{
-				if (i.key >= 0 && timeClock.getElapse() > 0.1)
+				if (i.key >= 0 && timeClock.getElapse() > 0.25)
 				{
 					mustafa.processKeyEvents(i.key, braveNewWorld);
 					updateChunks(braveNewWorld, mustafa);
@@ -81,7 +81,7 @@ public class Client implements Application
 			window.clear();
 			
 			if(gameState == GAMEPLAY) {
-				braveNewWorld.draw(renderer, window.getWidth(), window.getHeight());
+				braveNewWorld.updateAll(renderer, window.getWidth(), window.getHeight());
 			}
 			
 			window.update();

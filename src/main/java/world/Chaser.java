@@ -16,10 +16,10 @@ public class Chaser extends Entity {
 	@Override
 	public void update(World p_World) {
 		//Go after one guy only, unless they're out of range
-		if(getTarget().equals(null)) {
+		if(getTarget() == null) {
 			setTarget(p_World);
 		}
-		hunt8Way(20.0, p_World);
+		huntOrtho(20.0, p_World);
 	}
 	public int getID() { return ID; }
 }

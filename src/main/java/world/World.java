@@ -28,11 +28,26 @@ public class World
 		m_Seed = p_SeedStr.hashCode();
 	}
 	
+	public Player getFocus() { return focus; }
+	
 	public void setFocus(Player p_Focus)
 	{
 		focus = p_Focus;
 	}
 	
+	public void collectEntities(){
+		m_Entities = new ArrayList<Entity>();
+		//Add every entity in every chunk to the list
+		for(int i = 0; i < m_Chunks.size(); i++) {
+			for(int j = 0; j < m_Chunks.get(i).getEntities().size(); j++) {
+				m_Entities.add(m_Chunks.get(i).getEntities().get(j));
+			}
+		}
+	}
+	public ArrayList<Entity> getEntities(){
+		collectEntities();
+		return m_Entities;
+	}
 	/*
 	 * This makes this world rely on a server for chunk data and
 	 * entity updates.
@@ -113,7 +128,7 @@ public class World
 		return setTile(p_X, p_Y, (Tile)Chunk.createTileFromId(p_TileId));
 	}
 	
-	public synchronized void draw(Renderer r, int width, int height) {
+	public synchronized void updateAll(Renderer r, int width, int height) {
 		cameraOffset[0] = focus.getPosition()[0] - (r.getWindow().getWidth()/25)/2;
 		cameraOffset[1] = focus.getPosition()[1] - (r.getWindow().getHeight()/25)/2;
 		for(Chunk i : m_Chunks) { i.draw(r, cameraOffset); }
@@ -121,7 +136,8 @@ public class World
 		if (focus != null)
 			focus.draw(r, cameraOffset);
 		//TODO: adjust camera position
-		for(Entity i : m_Entities) { i.draw(r, cameraOffset); }
+		collectEntities();
+		for(Entity i : m_Entities) { i.draw(r, cameraOffset); i.update(this);}
 	}
 	
 	public void clearChunks()

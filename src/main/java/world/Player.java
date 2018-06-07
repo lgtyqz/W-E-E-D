@@ -21,12 +21,18 @@ public class Player extends Entity {
 	public static final String shovels = "shovels";
 	public static final String bombs = "bombs";
 	public static final String freezes = "freezes";
+	static final int[][] specialSauce = {
+			{-1, 0}, {1, 0}, {0, 1}, {0, -1}
+	};
 	
 	private int facing;
 	Map<String, Integer> items = new HashMap<String, Integer>();
 	
 	public Player() {
 		facing = facingRight;
+		items.put(shovels, 0);
+		items.put(bombs, 0);
+		items.put(freezes, 0);
 	}
 	
 	public Player(int x, int y) {
@@ -82,17 +88,17 @@ public class Player extends Entity {
 				}
 			break;
 			case facingRight:
-				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+				if(dig(p_World, 1, 0) && items.get(shovels) > 0) {
 					items.put(shovels, items.get(shovels) - 1);
 				}
 			break;
 			case facingUp:
-				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+				if(dig(p_World, 0, -1) && items.get(shovels) > 0) {
 					items.put(shovels, items.get(shovels) - 1);
 				}
 			break;
 			case facingDown:
-				if(dig(p_World, -1, 0) && items.get(shovels) > 0) {
+				if(dig(p_World, 0, 1) && items.get(shovels) > 0) {
 					items.put(shovels, items.get(shovels) - 1);
 				}
 			break;
@@ -107,12 +113,16 @@ public class Player extends Entity {
 	{
 		int[] p = getPosition();
 		int[] q = {0, 0};
+		//q makes it so that the player doesn't jump when spraying the seed
 		q[0] = p[0] + p_OffsetX;
 		q[1] = p[1] + p_OffsetY;
-		p_World.setTile(q[0] - 1, q[1], new WeedTile()); // Left
-		p_World.setTile(q[0] + 1, q[1], new WeedTile()); // Right
-		p_World.setTile(q[0], q[1] - 1, new WeedTile()); // Up
-		p_World.setTile(q[0], q[1] + 1, new WeedTile()); // Bottom
+		for(int i = 0; i < specialSauce.length; i++) {
+			if(p_World.getTile(q[0] + specialSauce[i][0],
+								q[1] + specialSauce[i][1]).getId() == 0) {
+				p_World.setTile(q[0] + specialSauce[i][0],
+								q[1] + specialSauce[i][1], new WeedTile());
+			}
+		}
 	}
 	
 	@Override

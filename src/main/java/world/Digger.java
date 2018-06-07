@@ -11,7 +11,7 @@ public class Digger extends Entity {
 		r.setTransformMatrix((new Matrix4f()).translate(
 				25 * (getPosition()[0] - cameraOffset[0]),
 				25 * (getPosition()[1] - cameraOffset[1]), 0));
-		r.drawRoundedRectangle(5, 40, 40);
+		r.drawRoundedRectangle(3, 25, 25);
 	}
 	@Override
 	public void update(World p_World) {

@@ -21,7 +21,7 @@ public class Util
 		return builder.toString();
 	}
 	
-	// Moved it over here so it can be used in other places
+	// Moved it over here so it can be used in other places <- good idea
 	public static double distance(int[] pos1, int[] pos2) {
 		return Math.sqrt(
 				Math.pow(pos1[0] - pos2[0], 2) + 
