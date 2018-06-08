@@ -1,0 +1,1 @@
+These go into the bin directory of the distribution.
