@@ -64,9 +64,9 @@ public class Server implements Application
 			try {
 				do
 				{
-					Thread.sleep(1000);
+					Thread.sleep(250);
 					m_World.update();
-					System.out.println("pie in the cow");
+					//System.out.println("pie in the cow");
 				} while(true);
 			}catch (Exception e) {
 				e.printStackTrace();

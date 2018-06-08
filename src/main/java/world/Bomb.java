@@ -1,4 +1,6 @@
 package world;
+import org.joml.Matrix4f;
+
 import graphics.Renderer;
 
 public class Bomb extends Entity {
@@ -6,7 +8,11 @@ public class Bomb extends Entity {
 	private float bombTimer = 3;
 	@Override
 	public void draw(Renderer r, int[] cameraOffset) {
-		//TODO: draw bomb texture
+		r.setColor(1f, 1f, 0f, 1f);
+		r.setTransformMatrix((new Matrix4f()).translate(
+				25 * (getPosition()[0] - cameraOffset[0]),
+				25 * (getPosition()[1] - cameraOffset[1]), 0));
+		r.drawRoundedRectangle(3, 25, 25);
 	}
 	@Override
 	public void handleTimers(float change) {

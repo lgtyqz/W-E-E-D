@@ -1,5 +1,6 @@
 package network;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.*;
 import java.net.*;
@@ -9,19 +10,24 @@ import world.*;
 class MessageUtil
 {
 	/*
+	 * Sent from clientside
 	 * Structure:
 	 * int[2] Offset
 	 */
 	public static final int REQUEST_CHUNK = 0;
 	/*
-	 * This is sent briefly after REQUEST_CHUNK
+	 * Sent from serverside
+	 * This is sent briefly after REQUEST_CHUNK.
 	 * Structure:
 	 * int[2] offset
 	 * Chunkdata
+	 * int entityCount
+	 * entitydata
 	 */
 	public static final int RECIEVED_CHUNK = 1;
 	
 	/*
+	 * Sent from clientside
 	 * Structure:
 	 * int[2] Position
 	 * int Id
@@ -29,12 +35,36 @@ class MessageUtil
 	public static final int TILE_CHANGED = 2;
 	
 	/*
+	 * Sent from serverside
 	 * Structure:
 	 * double timestamp
 	 */
 	public static final int SYNC_CLOCK = 3;
-	
+	/*
+	 * Sent from clientside
+	 */
 	public static final int REQUEST_SYNC_CLOCK = 4;
+	
+	/*
+	 * Sent from clientside
+	 */
+	public static final int REQUEST_PLAYERS = 5;
+
+	/*
+	 * Sent from serverside
+	 * Structure:
+	 * int count
+	 * PlayerList
+	 *   int[] pos
+	 */
+	public static final int RECIEVED_PLAYERS = 6;
+	
+	/*
+	 * Sent from clientside
+	 * Structure:
+	 * int[2] position
+	 */
+	public static final int PLAYER_UPDATE = 7;
 	
 	public static int[] readIntArr(Scanner p_Scanner, int p_Size)
 	{
@@ -84,12 +114,13 @@ class MessageUtil
 			for (int y = 0; y < Chunk.RowTileCount; y++)
 				p_Writer.println(p_Chunk.getTile(x, y).getId());
 		
-		p_Writer.println(p_Chunk.getEntities().size());
+		ArrayList<Entity> entities = p_Chunk.getEntities();
+		p_Writer.println(entities.size());
 		//System.out.println("Entities in chunk: " + p_Chunk.getEntities().size());
-		for(int e = 0; e < p_Chunk.getEntities().size(); e++) {
-			p_Writer.println(p_Chunk.getEntities().get(e).getPosition()[0]);
-			p_Writer.println(p_Chunk.getEntities().get(e).getPosition()[1]);
-			p_Writer.println(p_Chunk.getEntities().get(e).getID());
+		for(int e = 0; e < entities.size(); e++) {
+			p_Writer.println(entities.get(e).getPosition()[0]);
+			p_Writer.println(entities.get(e).getPosition()[1]);
+			p_Writer.println(entities.get(e).getID());
 			/*System.out.println(p_Chunk.getEntities().get(e).getPosition()[0]);
 			System.out.println(p_Chunk.getEntities().get(e).getPosition()[1]);
 			System.out.println(p_Chunk.getEntities().get(e).getID());

@@ -15,12 +15,14 @@ public class World
 	private Player focus;
 	private RemoteWorldConnection m_Remote;
 	private int m_Seed;
+	private ArrayList<Player> m_RemotePlayers;
 	
 	public World()
 	{
 		m_Remote = null;
 		m_Chunks = new ArrayList<Chunk>();
 		m_Entities = new ArrayList<Entity>();
+		m_RemotePlayers = new ArrayList<Player>();
 	}
 	
 	public void setSeed(String p_SeedStr)
@@ -35,10 +37,22 @@ public class World
 		focus = p_Focus;
 	}
 	
+	public void registerRemotePlayer(Player p_Player)
+	{
+		if (!m_RemotePlayers.contains(p_Player))
+			m_RemotePlayers.add(p_Player);
+	}
+	
+	public ArrayList<Player> getRemotePlayers()
+	{
+		return m_RemotePlayers;
+	}
+	
 	public synchronized void collectEntities(){
 		m_Entities = new ArrayList<Entity>();
-		if (focus != null)
-			m_Entities.add(focus);
+		
+		m_Entities.addAll(m_RemotePlayers);
+		
 		//Add every entity in every chunk to the list
 		for(int i = 0; i < m_Chunks.size(); i++) {
 			for(int j = 0; j < m_Chunks.get(i).getEntities().size(); j++) {

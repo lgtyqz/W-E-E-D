@@ -12,6 +12,7 @@ import world.*;
 
 /*
  * This class handles the communications between server and client World classes.
+ * TODO: It may be more reasonable to create 2 separate classes for server and client in the future.
  */
 public class RemoteWorldConnection implements Runnable 
 {
@@ -22,6 +23,12 @@ public class RemoteWorldConnection implements Runnable
 	private PrintWriter m_Writer;
 	private Thread m_Thread;
 	private Clock m_SyncClock;
+	
+	/*
+	 * This is only relevent on the server.
+	 * It keeps track of what player this connection is related to.
+	 */
+	private Player m_CurrentClientPlayer = new Player();
 	
 	//static ReentrantLock lock = new ReentrantLock();
 	
@@ -46,7 +53,7 @@ public class RemoteWorldConnection implements Runnable
 		m_Writer.println(MessageUtil.REQUEST_CHUNK);
 		m_Writer.println(p_X);
 		m_Writer.println(p_Y);
-		System.out.println("Requesting chunk (" + p_X + ", " + p_Y + ")");
+		//System.out.println("Requesting chunk (" + p_X + ", " + p_Y + ")");
 	}
 	
 	public void sendChangedTile(int p_X, int p_Y, Tile p_Tile)
@@ -67,6 +74,29 @@ public class RemoteWorldConnection implements Runnable
 	public void sendSyncClockRequest()
 	{
 		m_Writer.println(MessageUtil.REQUEST_SYNC_CLOCK);
+	}
+	
+	public void sendPlayerUpdate(int p_X, int p_Y)
+	{
+		m_Writer.println(MessageUtil.PLAYER_UPDATE);
+		m_Writer.println(p_X);
+		m_Writer.println(p_Y);
+	}
+	
+	public void sendPlayerListRequest()
+	{
+		m_Writer.println(MessageUtil.REQUEST_PLAYERS);
+	}
+	
+	public void sendPlayers()
+	{
+		m_Writer.println(MessageUtil.RECIEVED_PLAYERS);
+		m_Writer.println(m_World.getRemotePlayers().size());
+		for (Player i : m_World.getRemotePlayers())
+		{
+			m_Writer.println(i.getPosition()[0]);
+			m_Writer.println(i.getPosition()[1]);
+		}
 	}
 	
 	@Override
@@ -121,6 +151,30 @@ public class RemoteWorldConnection implements Runnable
 				{
 					m_Writer.println(MessageUtil.SYNC_CLOCK);
 					m_Writer.println(m_SyncClock.getStartTime());
+					break;
+				}
+				case MessageUtil.PLAYER_UPDATE:
+				{
+					int[] pos = MessageUtil.readIntArr(m_Scanner, 2);
+					m_CurrentClientPlayer.setPosition(pos);
+					m_World.registerRemotePlayer(m_CurrentClientPlayer);
+					break;
+				}
+				case MessageUtil.REQUEST_PLAYERS:
+				{
+					sendPlayers();
+					break;
+				}
+				case MessageUtil.RECIEVED_PLAYERS:
+				{
+					m_World.getRemotePlayers().clear();
+					int count = m_Scanner.nextInt();
+					for (int i = 0; i < count; i++)
+					{
+						Player player = new Player();
+						player.setPosition(new int[] {m_Scanner.nextInt(), m_Scanner.nextInt()});
+						m_World.registerRemotePlayer(player);
+					}
 					break;
 				}
 				}

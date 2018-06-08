@@ -39,6 +39,7 @@ public class Client implements Application
 		
 		Window window = new Window();
 		window.init(800, 600, "Pie in the horse");
+		window.setVSync(true);
 		
 		Shovel.shovelSprite = new Texture("images/shovel.png");
 		
@@ -65,15 +66,16 @@ public class Client implements Application
 		renderer.setWindow(window);
 		
 		Clock timeClock = new Clock();
-		Clock moveClock = new Clock();
 		Clock chunkRefreshClock = new Clock();
 		while (!window.closing())
 		{
 			// Let's clear the chunks periodically for performance reasons
-			if (chunkRefreshClock.getElapse() >= 5)
+			if (chunkRefreshClock.getElapse() >= 0.25)
 			{
-				System.out.println("Clearing useless chunks");
+				//System.out.println("Clearing useless chunks");
 				braveNewWorld.clearChunks(mustafa.getPosition(), Chunk.RowTileCount*2);
+				updateChunks(braveNewWorld, mustafa);
+				remote.sendPlayerListRequest();
 				chunkRefreshClock.restart();
 			}
 			
@@ -83,11 +85,10 @@ public class Client implements Application
 				if (i.key >= 0 && timeClock.getElapse() > 0.25)
 				{
 					mustafa.processKeyEvents(i.key, braveNewWorld);
-					updateChunks(braveNewWorld, mustafa);
+					remote.sendPlayerUpdate(mustafa.getPosition()[0], mustafa.getPosition()[1]);
 					timeClock.restart();
 				}
 			}
-			
 			
 			window.clear();
 			
