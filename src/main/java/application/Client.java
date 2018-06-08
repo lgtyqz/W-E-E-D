@@ -19,6 +19,14 @@ public class Client implements Application
 	static final int SPAWNING = 1;
 	static final int GAMEPLAY = 2;
 	
+	private String m_RemoteIP;
+	
+	public void setIP(String p_RemoteIP)
+	{
+		m_RemoteIP = p_RemoteIP;
+	}
+	
+	
 	@Override
 	public void run()
 	{
@@ -32,12 +40,15 @@ public class Client implements Application
 		Window window = new Window();
 		window.init(800, 600, "Pie in the horse");
 		
+		Shovel.shovelSprite = new Texture("images/shovel.png");
+		
 		Player mustafa = new Player(14, 10);
 		World braveNewWorld = new World();
 		
 		Socket socket = null;
 		try {
-			socket = new Socket("localhost", 1000);
+			System.out.println("Connecting to " + m_RemoteIP);
+			socket = new Socket(m_RemoteIP == null ? "localhost" : m_RemoteIP, 1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,7 +92,8 @@ public class Client implements Application
 			window.clear();
 			
 			if(gameState == GAMEPLAY) {
-				braveNewWorld.updateAll(renderer, window.getWidth(), window.getHeight());
+				braveNewWorld.draw(renderer, window.getWidth(), window.getHeight());
+				
 			}
 			
 			window.update();

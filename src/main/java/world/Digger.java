@@ -27,8 +27,8 @@ public class Digger extends Entity {
 					dig(p_World, j, i);
 				}
 			}
-			incrementMoves(); //to switch back to hunt mode
 		}
+		incrementMoves(); //to switch modes
 	}
 	public int getID() { return ID; }
 }

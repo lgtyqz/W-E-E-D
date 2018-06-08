@@ -23,6 +23,8 @@ public class Texture
 	
 	private int m_Width, m_Height;
 	
+	public Texture() {}
+	
 	public Texture(String p_FilePath) {
 		loadResource(p_FilePath);
 	}

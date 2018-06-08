@@ -31,7 +31,7 @@ public class RemoteWorldConnection implements Runnable
 		m_World = p_World;
 		m_Socket = p_Socket;
 		try {
-			// The bufferreader will handle the input and allow us to check if there is any daya to read from the stream.
+			// The bufferreader will handle the input and allow us to check if there is any data to read from the stream.
 			// The scanner's next### and hasNext### methods block the thread and doesn't allow us to terminate it.
 			m_BufReader = new BufferedReader(new InputStreamReader(p_Socket.getInputStream()));
 			m_Scanner = new Scanner(m_BufReader);
@@ -89,7 +89,7 @@ public class RemoteWorldConnection implements Runnable
 				
 				// Interpret the message
 				int message = m_Scanner.nextInt();
-				System.out.println("Recieved message: " + message);
+				//System.out.println("Recieved message: " + message);
 				switch(message)
 				{
 				case MessageUtil.REQUEST_CHUNK:

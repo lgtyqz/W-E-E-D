@@ -16,7 +16,7 @@ public class Entity {
 	public int[] getPosition() { return m_position; };
 	public float getTimer() { return moveTimer; }
 	public void setTimer(long p_moveTimer) { moveTimer = p_moveTimer; }
-	public boolean isAlive() { return dead; }
+	public boolean isAlive() { return !dead; }
 	public void kill() { dead = true; }
 	public int getMoveCount() { return moveCount; }
 	public void setMoveCount(int p_NewCount) { moveCount = p_NewCount; }
@@ -111,8 +111,10 @@ public class Entity {
 		}
 	}
 	public boolean dig(World p_World, int p_dX, int p_dY) {
-		if(p_World.getTile(getPosition()[0] + p_dX,
-							getPosition()[1] + p_dY).getId() == 1){
+		Tile t = p_World.getTile(getPosition()[0] + p_dX, getPosition()[1] + p_dY);
+		/*p_World.ensureChunkExistence(getPosition()[0] + p_dX,
+									getPosition()[1] + p_dY);*/
+		if(t != null && t.getId() == 1){
 			//Is it a weed?
 			p_World.setTile(getPosition()[0] + p_dX,
 					getPosition()[1] + p_dY, new EmptyTile());

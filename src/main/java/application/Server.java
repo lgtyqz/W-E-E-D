@@ -6,6 +6,7 @@ import java.net.*;
 import graphics.Renderer;
 import graphics.Window;
 import network.*;
+import util.Clock;
 import world.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class Server implements Application
 	private ArrayList<RemoteWorldConnection> m_ClientThreads;
 	private World m_World;
 	private Thread m_ClientAcceptingThread;
+	private Thread m_WorldUpdateThread;
 	
 	class ClientAcceptingThread implements Runnable
 	{
@@ -41,7 +43,31 @@ public class Server implements Application
 					RemoteWorldConnection remote = new RemoteWorldConnection(m_Server.m_World, socket);
 					remote.start(Integer.toString(m_ClientThreads.size()));
 					m_ClientThreads.add(remote);
-				}	
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	class WorldUpdateThread implements Runnable
+	{
+		private World m_World;
+		public WorldUpdateThread(World p_World)
+		{
+			m_World = p_World;
+		}
+		
+		@Override
+		public void run()
+		{
+			try {
+				do
+				{
+					Thread.sleep(1000);
+					m_World.update();
+					System.out.println("pie in the cow");
+				} while(true);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -60,10 +86,10 @@ public class Server implements Application
 		// End all the world connections
 		for (RemoteWorldConnection i : m_ClientThreads)
 			i.getThread().interrupt();
-		
 		try {
 			// Causes ClientAcceptingThread to throw an exception and terminate.
 			m_ServerSocket.close();
+			m_WorldUpdateThread.interrupt();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,5 +101,8 @@ public class Server implements Application
 	{
 		m_ClientAcceptingThread = new Thread(new ClientAcceptingThread(this), "ClientAcceptingThread");
 		m_ClientAcceptingThread.start();
+		
+		m_WorldUpdateThread = new Thread(new WorldUpdateThread(m_World), "WorldUpdateThread");
+		m_WorldUpdateThread.start();
 	}
 }

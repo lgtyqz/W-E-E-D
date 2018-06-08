@@ -35,8 +35,10 @@ public class World
 		focus = p_Focus;
 	}
 	
-	public void collectEntities(){
+	public synchronized void collectEntities(){
 		m_Entities = new ArrayList<Entity>();
+		if (focus != null)
+			m_Entities.add(focus);
 		//Add every entity in every chunk to the list
 		for(int i = 0; i < m_Chunks.size(); i++) {
 			for(int j = 0; j < m_Chunks.get(i).getEntities().size(); j++) {
@@ -44,6 +46,7 @@ public class World
 			}
 		}
 	}
+	
 	public ArrayList<Entity> getEntities(){
 		collectEntities();
 		return m_Entities;
@@ -86,27 +89,25 @@ public class World
 	public synchronized Chunk ensureChunkExistence(int p_X, int p_Y)
 	{
 		Chunk chunk = getChunk(p_X, p_Y);
-		if (chunk == null)
+
+		// Send a request to the server for a chunk update
+		if (m_Remote != null)
+			m_Remote.sendChunkRequest(p_X, p_Y);
+		if (chunk == null && m_Remote == null)
 		{
-			// Send a request to the server for a new chunk
-			if (m_Remote != null)
-				m_Remote.sendChunkRequest(p_X, p_Y);
-			else
-			{
-				chunk = new Chunk();
-				int[] offset = getChunkOffsetFromTilePosition(p_X, p_Y);
-				chunk.setOffset(offset[0], offset[1]);
-				//System.out.println("TECHNO GENERATION");
-				chunk.generate(m_Seed);
-				m_Chunks.add(chunk);
-			}
+			chunk = new Chunk();
+			int[] offset = getChunkOffsetFromTilePosition(p_X, p_Y);
+			chunk.setOffset(offset[0], offset[1]);
+			//System.out.println("TECHNO GENERATION");
+			chunk.generate(m_Seed);
+			m_Chunks.add(chunk);
 		}
 		return chunk;
 	}
 	
 	public synchronized Tile getTile(int p_X, int p_Y)
 	{
-		Chunk chunk = ensureChunkExistence(p_X, p_Y);
+		Chunk chunk = getChunk(p_X, p_Y);
 		if (chunk != null)
 			return chunk.getTile(p_X - chunk.getOffset()[0], p_Y - chunk.getOffset()[1]);
 		return null;
@@ -114,7 +115,7 @@ public class World
 	
 	public Tile setTile(int p_X, int p_Y, Tile p_Tile)
 	{
-		Chunk chunk = ensureChunkExistence(p_X, p_Y);
+		Chunk chunk = getChunk(p_X, p_Y);
 		if (m_Remote != null)
 			m_Remote.sendChangedTile(p_X, p_Y, p_Tile);
 		if (chunk != null)
@@ -128,7 +129,7 @@ public class World
 		return setTile(p_X, p_Y, (Tile)Chunk.createTileFromId(p_TileId));
 	}
 	
-	public synchronized void updateAll(Renderer r, int width, int height) {
+	public synchronized void draw(Renderer r, int width, int height) {
 		cameraOffset[0] = focus.getPosition()[0] - (r.getWindow().getWidth()/25)/2;
 		cameraOffset[1] = focus.getPosition()[1] - (r.getWindow().getHeight()/25)/2;
 		for(Chunk i : m_Chunks) { i.draw(r, cameraOffset); }
@@ -137,9 +138,17 @@ public class World
 			focus.draw(r, cameraOffset);
 		//TODO: adjust camera position
 		collectEntities();
-		for(Entity i : m_Entities) { i.draw(r, cameraOffset); i.update(this);}
+		for(Entity i : m_Entities) { i.draw(r, cameraOffset);}
 	}
-	
+	public void update() {
+		collectEntities();
+		for(int i = 0; i < m_Entities.size(); i++) {
+			m_Entities.get(i).update(this);
+			if(!m_Entities.get(i).isAlive()) {
+				m_Entities.remove(i--);
+			}
+		}
+	}
 	public void clearChunks()
 	{
 		m_Chunks.clear();
